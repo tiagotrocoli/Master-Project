@@ -20,15 +20,15 @@ void HyperbolicAlgorithm::estimate(std::vector<double> &x, std::vector<double> &
         ri = d[i];
 
         //set value of Matrix A
-        A.setCell(i, 0, 2 * (xi - x0));
-        A.setCell(i, 1, 2 * (yi - y0));
+        A.setCell(i-1, 0, 2 * (xi - x0));
+        A.setCell(i-1, 1, 2 * (yi - y0));
 
         //set value of Matrix B
-        B.setCell(i, 0, (r0 * r0 - ri * ri) - (x0 * x0 - xi * xi) - (y0 * y0 - yi * yi));
+        B.setCell(i-1, 0, (r0 * r0 - ri * ri) - (x0 * x0 - xi * xi) - (y0 * y0 - yi * yi));
     }
 
     AA = A.transpose() * A;
-    if (AA.getDet() != 0) {
+    if (AA.getDet() != 0){
         Matrix tarPosMat(2, 1);
         tarPosMat = AA.inverse() * A.transpose() * B;
         std::cout << tarPosMat.getCell(0, 0) << " " << tarPosMat.getCell(1, 0) << std::endl;
