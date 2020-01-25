@@ -41,7 +41,7 @@ def main():
 		print("Processing network "+wifi+" ...")
 
 		strcmd  = os.popen(cmd).readlines()
-		if not any(wifi in line for line in strcmd)
+		if not any(wifi in line for line in strcmd):
 			continue
 
 		f= open(wifi+"-"+str(dist[i])+".txt","w")
