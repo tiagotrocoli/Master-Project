@@ -9,10 +9,14 @@ def stDeviation(list, avg):
                 std = std +  (num - avg)**2
         return (std/(len(list)-1))**(0.5)
 
+def createDirectory():
+
+	for i in range(6):
+		f.write()
+
 def main():
 	
 	dist = []
-	i = 0
 	
 	n    	= int(sys.argv[1])
 	x0	= int(sys.argv[2])
@@ -36,36 +40,37 @@ def main():
 	num = ["3", "6", "2", "4", "7", "8"]
 	wifis = ["TiagoLocalizacao1", "TiagoLocalizacao2", "TiagoLocalizacao0", "TiagoLocalizacao3", "TiagoLocalizacao4", "LSC_HoneyPot"]
 	
+	f= open("Localiza"+str(x0)+str(y0)+".txt","w")
+	f.write(str(x0) + " " +str(y0)+"\n")
+	f.write(str(n)+"\n")
+	for i in range(6):
+		f.write(wifis[i] + " " + dist[i]+"\n")
+
+	i = 0
+
 	for wifi in wifis:	
 		
 		print("Processing network "+wifi+" ...")
 
 		strcmd  = os.popen(cmd).readlines()
 		if not any(wifi in line for line in strcmd):
+			i = i + 1
 			continue
-
-		f= open(wifi+"-"+str(dist[i])+".txt","w")
 		
-		#avg = 0
-		#list = []
+		f.write("\n"+wifi+"\n")
 		for j in range(0,n):
 		        strcmd  = os.popen(cmd).readlines() 
-		        for i in range(0,len(strcmd)):
-		                if wifi in strcmd[i]:
-		                        line = strcmd[i].split()
+		        for k in range(0,len(strcmd)):
+		                if wifi in strcmd[k]:
+		                        line = strcmd[k].split()
 		                        f.write(line[0]+"\n")
 					break
 		        time.sleep(5)
 
-		#avg = avg/(1.0*n)
-		#std = stDeviation(list, avg)
-		#f.write("Average: " + str(avg)+"\n")
-		#f.write("Standard Deviation: " + str(std) + ".\n")
-		f.close()
 		i = i + 1
-
 		print("End.")
 
+	f.close()
 
 if __name__== "__main__":
         main()
