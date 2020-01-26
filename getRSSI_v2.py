@@ -19,13 +19,13 @@ def main():
 	dist = []
 	
 	n    	= int(sys.argv[1])
-	x0	= int(sys.argv[2])
-	y0	= int(sys.argv[3])
-	h0 	= int(sys.argv[4])	
-
+	x0	= float(sys.argv[2])
+	y0	= float(sys.argv[3])
+	h0 	= float(sys.argv[4])	
+	
 	x = [4.4, 2.2, 0, 6.6, 0, 6.6]
 	y = [2.6,13.0,6.5, 10.4, 3.9, 7.8]
-	h = [0.76, 1.7, 1.65, 1.37, 2.02, 1.52]
+	h = [0.76, 1.7, 1.65, 1.17, 2.02, 1.52]
 	
 	for i in range(6):
 		dist.append(math.sqrt((x[i]-x0)**2 + (y[i]-y0)**2 + (h[i]-h0)**2))
@@ -40,24 +40,22 @@ def main():
 	num = ["3", "6", "2", "4", "7", "8"]
 	wifis = ["TiagoLocalizacao1", "TiagoLocalizacao2", "TiagoLocalizacao0", "TiagoLocalizacao3", "TiagoLocalizacao4", "LSC_HoneyPot"]
 	
-	f= open("Localiza"+str(x0)+str(y0)+".txt","w")
-	f.write(str(x0) + " " +str(y0)+"\n")
+	f= open("Localize"+str(x0)+str(y0)+".txt","w")
+	f.write(str(x0) + " " +str(y0)+ " " + str(h0) + "\n")
 	f.write(str(n)+"\n")
-	for i in range(6):
-		f.write(wifis[i] + " " + dist[i]+"\n")
-
+	
 	i = 0
 
 	for wifi in wifis:	
 		
 		print("Processing network "+wifi+" ...")
-
+	
 		strcmd  = os.popen(cmd).readlines()
 		if not any(wifi in line for line in strcmd):
 			i = i + 1
 			continue
 		
-		f.write("\n"+wifi+"\n")
+		f.write(wifis[i] + " " + str(dist[i])+"\n")
 		for j in range(0,n):
 		        strcmd  = os.popen(cmd).readlines() 
 		        for k in range(0,len(strcmd)):
@@ -65,7 +63,7 @@ def main():
 		                        line = strcmd[k].split()
 		                        f.write(line[0]+"\n")
 					break
-		        time.sleep(5)
+		        time.sleep(2)
 
 		i = i + 1
 		print("End.")
