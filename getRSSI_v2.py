@@ -62,8 +62,8 @@ def main():
 		                if wifi in strcmd[k]:
 		                        line = strcmd[k].split()
 		                        f.write(line[0]+"\n")
-					break
-		        time.sleep(2)
+                                break
+                time.sleep(2)
 
 		i = i + 1
 		print("End.")
