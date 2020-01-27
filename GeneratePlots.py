@@ -29,7 +29,7 @@ def main():
             for j in range(1,11):
                 rssi[i][k].append(float(lines[2+11*i+j]))
             k = k + 1
-        print(len(rssi[i]))
+        
         plt.plot(dist[i], rssi[i], 'ko')
         plt.title(networks[i]+" distance x rssi")
         plt.xlabel("Distance (m)")
