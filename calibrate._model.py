@@ -22,7 +22,8 @@ networks = ['TiagoLocalizacao1','TiagoLocalizacao2','TiagoLocalizacao0','TiagoLo
 # x[0] = A, x[1] = n (path-loss coefficient)
 def mse(x):
     sum = 0
-    for j in range(22):
+    n = len(dist[i])
+    for j in range(n):
         sum = sum + ( avg[i][j] -  (x[0] - 10*x[1]*math.log10(dist[i][j])) )**2
     return sum/22
 
@@ -38,14 +39,28 @@ def plotModel(x):
     
     rssi_pred = x[0] - 10*x[1]*np.log10(np.sort(dist[i]))
     
+    plt.figure(figsize=(16.0,12.0))
     plt.scatter(dist[i], avg[i], color = "k", marker = "o") 
     plt.plot(np.sort(dist[i]), rssi_pred, color = "k")
-    
     plt.title(networks[i] + "\nrssi = " + str(x0) + " - 10*" + str(x1) + "*log(d)")
     plt.xlabel("Distance (m)")
     plt.ylabel("Average of RSSI (dBm)")
     plt.savefig(networks[i]+"_model")
     plt.show()
+    
+def removeDuplicate(dist,rssi):
+    
+    for i in range(len(dist)):
+        j = i + 1
+        while(j < len(dist)):
+            if dist[i] == dist[j]:
+                rssi[i].extend(rssi[j])
+                rssi.pop(j)
+                dist.pop(j)
+            else:
+                j = j + 1
+    
+    return (dist, rssi)
     
 def main():
     
@@ -63,22 +78,16 @@ def main():
             lines = file.readlines()
             dist[i].append(float(lines[2+11*i].split(" ")[1]))
             rssi[i].append([])
-            total = 0
             for j in range(1,11):
-                num = float(lines[2+11*i+j])
-                total = total + num
-                rssi[i][k].append(num)
-            avg[i].append(total/10.0)
+                rssi[i][k].append(float(lines[2+11*i+j]))
             k = k + 1
+            
+        dist[i], rssi[i] = removeDuplicate(dist[i], rssi[i])
+        for s in range(len(dist[i])):
+            avg[i].append( np.sum(rssi[i][s])/(1.0*len(rssi[i][s])) )
         res = calibrate()
         plotModel(res.x)
         i = i + 1
-        
-        #plt.plot(dist[i], rssi[i], 'ko')
-        #plt.title(networks[i]+" distance x rssi")
-        #plt.xlabel("Distance (m)")
-        #plt.ylabel("RSSI (dBm)")
-        #plt.savefig(networks[i])
         
 if __name__== "__main__":
         main()
