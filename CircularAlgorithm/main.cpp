@@ -1,7 +1,7 @@
 #include "CircularAlgorithm.h"
 
 int main(void){
-
+	// don't forget,process time also!!!!
     CircularAlgorithm C;
 
     std::vector<double> xi = {0.36,1.57,11.26, 7.12};
