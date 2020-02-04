@@ -31,7 +31,8 @@ void HyperbolicAlgorithm::estimate(std::vector<double> &x, std::vector<double> &
     if (AA.getDet() != 0){
         Matrix tarPosMat(2, 1);
         tarPosMat = AA.inverse() * A.transpose() * B;
-        std::cout << tarPosMat.getCell(0, 0) << " " << tarPosMat.getCell(1, 0) << std::endl;
+        std::cout << tarPosMat.getCell(0, 0) << std::endl;
+        std::cout << tarPosMat.getCell(1, 0) << std::endl;
     } else {
         std::cout << "NULL" << std::endl;
     }

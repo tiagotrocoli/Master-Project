@@ -43,7 +43,7 @@ def mse(x):
 
 def calibrate():
     x0 = np.array([1.0, 1.0])
-    res = minimize(mse, x0, method='BFGS', options={'xatol': 1e-8, 'disp': True})
+    res = minimize(mse, x0, method='BFGS', options={'gtol': 1e-8, 'disp': True})
     return res
 
 def plotModel(x, fun):
@@ -82,7 +82,7 @@ def main():
     
     global i
     m = len(networks)
-    path = 'Data/'
+    path = 'Results/RSSI/'
     
     while(i < m):
         dist.append([])

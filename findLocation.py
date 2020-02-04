@@ -75,7 +75,7 @@ def main():
     
     header      = makeHeader()    
     n           = len(sys.argv) - 6
-    l_distance = getDistances()
+    l_distance  = getDistances()
     
     # for each location method, do...
     for i in range(1,n):
