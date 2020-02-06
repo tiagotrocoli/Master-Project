@@ -41,12 +41,12 @@ def collectRSSI(position):
 	t5 = '\\t'.join(('"s/', 'SSID: //"'))
 	t6 = "'{ORS = (NR % 2 == 0)? " + t4 + ' : ' + '" "' + "; print}'"
 	cmd = "sudo iw dev wlan0 scan | egrep " + t1 + " | sed -e " + t3 + " -e " + t5 + " | awk " + t6 + " | sort"
-
-	for wifi in wifis:
-		l_rssi = []
-		print("Collecting data from network "+wifi)
-		for i in range(10):
-			strcmd  = os.popen(cmd).readlines()
+    
+    for i in range(10):
+        lssi = []
+        print("Collecting data from network "+wifi)
+        for wifi in wifis:
+		 strcmd= os.popen(cmd).readlines()
 			for j in range(0,len(strcmd)):
 				if wifi in strcmd[j]:
 					line = strcmd[j].split()
@@ -73,6 +73,7 @@ def main():
     # collect distances
 	for i in range(1,7):
 		distances.append(float(sys.argv[i]))
+        
 	position = getRealPosition()
 	storePosition(position,distances,"Sheet1")
 	collectRSSI(position)
