@@ -42,7 +42,7 @@ def findDistance(a, n, rssi):
 def getTestData(path):
     wbk     = load_workbook(path)
     sheet   = wbk["Sheet1"]
-    cells   = sheet['A2': 'H261']
+    cells   = sheet['A2': 'H181']
     
     for k in range(6):
         l_rssi.append([])
@@ -82,7 +82,7 @@ def circularAlgorithm(rssi):
 
 def main():
     
-    getTestData('dataBase.xlsx')
+    getTestData('testPoints.xlsx')
     n = len(position)
     
     for i in range(n):
