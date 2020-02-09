@@ -23,7 +23,7 @@ position    = []
 def mse(var):
     sum = 0
     
-    for i in range(5):
+    for i in range(0,5):
         sum = sum + ( (x[i] - var[0])**2 + (y[i] - var[1])**2 + (h[i] - 0.73)**2 - d[i]**2)**2
 
     return sum
@@ -48,18 +48,27 @@ def getTestData(path):
         l_rssi.append([])
     
     i = -1
+    sum = [0, 0, 0, 0, 0, 0]
     locale.setlocale(locale.LC_ALL, 'en_US.UTF-8')
     for pos1, pos2, c1, c2, c3, c4, c5, c6 in cells:
         i = i + 1
-        position.append([])
-        position[i].append(locale.atof(pos1.value))
-        position[i].append(locale.atof(pos2.value))
-        l_rssi[0].append(locale.atof(c1.value))
-        l_rssi[1].append(locale.atof(c2.value))
-        l_rssi[2].append(locale.atof(c3.value))
-        l_rssi[3].append(locale.atof(c4.value))
-        l_rssi[4].append(locale.atof(c5.value))
-        l_rssi[5].append(locale.atof(c6.value))
+        sum[0] = sum[0] + locale.atof(c1.value)
+        sum[1] = sum[1] + locale.atof(c2.value)
+        sum[2] = sum[2] + locale.atof(c3.value)
+        sum[3] = sum[3] + locale.atof(c4.value)
+        sum[4] = sum[4] + locale.atof(c5.value)
+        sum[5] = sum[5] + locale.atof(c6.value)
+        if (i+1) % 10 == 0: 
+            position.append([])
+            position[int(i/10)].append(locale.atof(pos1.value))
+            position[int(i/10)].append(locale.atof(pos2.value))
+            l_rssi[0].append(sum[0]/10)
+            l_rssi[1].append(sum[1]/10)
+            l_rssi[2].append(sum[2]/10)
+            l_rssi[3].append(sum[3]/10)
+            l_rssi[4].append(sum[4]/10)
+            l_rssi[5].append(sum[5]/10)
+            sum[0] = sum[1] = sum[2] = sum[3] = sum[4] = sum[5] = 0
 
 
 def circularAlgorithm(rssi):
