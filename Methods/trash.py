@@ -1,10 +1,10 @@
 from openpyxl import load_workbook
 import locale
 
-path    = 'testPoints.xlsx'
+path    = 'dataBase.xlsx'
 wbk     = load_workbook(path)
 sheet   = wbk["Sheet1"]
-cells   = sheet['A2': 'H181']
+cells   = sheet['A2': 'H261']
 
 i = -1
 l_rssi = []
@@ -23,7 +23,6 @@ for pos1, pos2, c1, c2, c3, c4, c5, c6 in cells:
     sum[4] = sum[4] + locale.atof(c5.value)
     sum[5] = sum[5] + locale.atof(c6.value)
     if (i+1) % 10 == 0:
-        print(int(i/10))
         position.append([])
         position[int(i/10)].append(locale.atof(pos1.value))
         position[int(i/10)].append(locale.atof(pos2.value))
@@ -34,7 +33,17 @@ for pos1, pos2, c1, c2, c3, c4, c5, c6 in cells:
         l_rssi[4].append(sum[4]/10)
         l_rssi[5].append(sum[5]/10)
         sum[0] = sum[1] = sum[2] = sum[3] = sum[4] = sum[5] = 0
-        
-        
-print(len(l_rssi[0]))
-print(l_rssi[0])
+
+#print('\n'.join(str(x) for x in position[0]))
+print("---------------------------")
+print('\n'.join(str(x) for x in l_rssi[0]))
+print("---------------------------")
+print('\n'.join(str(x) for x in l_rssi[1]))
+print("---------------------------")
+print('\n'.join(str(x) for x in l_rssi[2]))
+print("---------------------------")
+print('\n'.join(str(x) for x in l_rssi[3]))
+print("---------------------------")
+print('\n'.join(str(x) for x in l_rssi[4]))
+print("---------------------------")
+print('\n'.join(str(x) for x in l_rssi[5]))
