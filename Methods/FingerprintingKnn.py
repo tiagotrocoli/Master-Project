@@ -1,22 +1,28 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python2
 # -*- coding: utf-8 -*-
 """
-Created on Sun Feb  9 18:54:06 2020
+Created on Mon Feb 10 14:16:43 2020
 
-@author: tiago
+@author: mister-c
 """
 
-
+import sys
 import time
 import math
 import locale
-import numpy as np
-from numpy.linalg import inv
 from openpyxl import load_workbook
 
 x           = [4.4, 2.2, 0, 6.6, 0, 6.6]
 y           = [2.6,13.0,6.5, 10.4, 3.9, 7.8]
 h           = [0.76, 1.7, 1.65, 1.17, 2.02, 1.52]
+
+
+def storeData(data,sheetName):
+    path    = "methods.xlsx"
+    wbk     = load_workbook(path)
+    page    = wbk[sheetName]
+    page.append(data)
+    wbk.save(path)
 
 def getData(path, page, ini, end):
     wbk     = load_workbook(path)
@@ -39,6 +45,8 @@ def getData(path, page, ini, end):
 
 def main():
     
+    n = int(sys.argv[1])
+    
     l_base, base_pos = getData('dataBase.xlsx',"Average" ,"A2", "H27")
     l_test, test_pos = getData('testPoints.xlsx', "Average",  "A2", "H19")
     
@@ -46,15 +54,30 @@ def main():
     for point in l_test:
         k = k + 1
         cost = []
+        # execute Fingerpriting and calculate its processing time
+        start = time.time()
         for i in range(26):
             cost.append((point[0] - l_base[i][0])**2 + (point[1] - l_base[i][1])**2 + (point[2] - l_base[i][2])**2 + (point[3] - l_base[i][3])**2 + (point[4] - l_base[i][4])**2)
+        # sort cost and index of base_pos accordingly
         pos = [x for _,x in sorted(zip(cost,base_pos))]
-        x = (pos[0][0] + pos[1][0] + pos[2][0])/3
-        y = (pos[0][1] + pos[1][1] + pos[2][1])/3
+        x = y = 0
+        for j in range(n):
+            x = x + pos[j][0]
+            y = y + pos[j][1]
+        x = x/(1.0*n)
+        y = y/(1.0*n)
+        duration = time.time() - start
         estimate = [round(x, 2),round(y, 2)]
-        #argmin = cost.index(min(cost))
-        #print(estimate, test_pos[k])
-        print(math.sqrt((estimate[0] - test_pos[k][0])**2 + (estimate[1] - test_pos[k][1])**2))
-    
+        # calculate error
+        error = math.sqrt((estimate[0] - test_pos[k][0])**2 + (estimate[1] - test_pos[k][1])**2)
+        # put them together
+        data = [test_pos[k][0], test_pos[k][1]]
+        data.extend(estimate)
+        data.append(duration)
+        data.append(error)
+        # store in xlsx
+        storeData(data, "FingerKnn"+str(n))
+        
+        
 if __name__== "__main__":
         main()

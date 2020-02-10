@@ -33,8 +33,8 @@ def findDistance(a, n, rssi):
 # get position and RSSI from excel
 def getTestData(path):
     wbk     = load_workbook(path)
-    sheet   = wbk["Sheet1"]
-    cells   = sheet['A2': 'H181']
+    sheet   = wbk["Average"]
+    cells   = sheet['A2': 'H19']
     
     for k in range(6):
         l_rssi.append([])
@@ -99,12 +99,12 @@ def main():
         res = hyperbolicAlgorithm(rssi)
         duration = time.time() - start
         # calculate precision
-        precision = math.sqrt( (position[i][0] - res[0])**2 + (position[i][1] - res[1])**2 )
+        error = math.sqrt( (position[i][0] - res[0])**2 + (position[i][1] - res[1])**2 )
         # put them together
         data = [position[i][0], position[i][1]]
         data.extend(res)
         data.append(duration)
-        data.append(precision)
+        data.append(error)
         # store in xlsx
         storeData(data,"HyperbolicAlgo")
     
