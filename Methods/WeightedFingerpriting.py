@@ -11,6 +11,7 @@ import sys
 import time
 import math
 import locale
+import numpy as np
 from openpyxl import load_workbook
 
 x           = [4.4, 2.2, 0, 6.6, 0, 6.6]
@@ -49,20 +50,20 @@ def main():
     n = int(sys.argv[1])
     
     # get list of rssi and list of position, respectivelly
-    l_base, base_pos = getData('dataBase.xlsx',"Average" ,"A2", "H27")
+    l_base, base_pos = getData('dataBase.xlsx',"Average" ,"A2", "H44")
     l_test, test_pos = getData('testPoints.xlsx', "Average",  "A2", "H19")
     
     k = -1
     w0 = 10**(-8)
     for point in l_test:
         k = k + 1
-        cost = []
         # execute Fingerpriting and calculate its processing time
+        cost = []
         start = time.time()
-        for i in range(26):
+        for i in range(43):
             cost.append((point[0] - l_base[i][0])**2 + (point[1] - l_base[i][1])**2 + (point[2] - l_base[i][2])**2 + (point[3] - l_base[i][3])**2 + (point[4] - l_base[i][4])**2)
-        # sort cost and index of base_pos accordingly
-        index = sorted(range(len(cost)), key=lambda k: cost[k])
+        # return a list of index of sorted cost
+        index = np.argsort(cost)
         # set the weight
         weight = 0
         for j in range(0,n):

@@ -47,7 +47,7 @@ def main():
     
     n = int(sys.argv[1])
     
-    l_base, base_pos = getData('dataBase.xlsx',"Average" ,"A2", "H27")
+    l_base, base_pos = getData('dataBase.xlsx',"Average" ,"A2", "H44")
     l_test, test_pos = getData('testPoints.xlsx', "Average",  "A2", "H19")
     
     k = -1
@@ -56,7 +56,7 @@ def main():
         cost = []
         # execute Fingerpriting and calculate its processing time
         start = time.time()
-        for i in range(26):
+        for i in range(43):
             cost.append((point[0] - l_base[i][0])**2 + (point[1] - l_base[i][1])**2 + (point[2] - l_base[i][2])**2 + (point[3] - l_base[i][3])**2 + (point[4] - l_base[i][4])**2)
         # sort cost and index of base_pos accordingly
         pos = [x for _,x in sorted(zip(cost,base_pos))]

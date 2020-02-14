@@ -37,7 +37,7 @@ def getData(path, page, ini, end):
 
     i = -1
     locale.setlocale(locale.LC_ALL, 'en_US.UTF-8')
-    for pos1, pos2, c1, c2, c3, c4, c5, c6 in cells:
+    for pos1, pos2, c1, c2, c3, c4, c5 in cells:
         i = i + 1
         position.append([])
         position[i].append(locale.atof(pos1.value))
@@ -46,25 +46,26 @@ def getData(path, page, ini, end):
     
     return row, position
 
-
-def NN():
-    base_rssi, base_pos = getData('dataBase.xlsx',"Sheet1" ,"A2", "H261")
-    test_rssi, test_pos = getData('testPoints.xlsx', "Average",  "A2", "H19")
+def main():
     
+    base_rssi, base_pos = getData('dataBase.xlsx',"Sheet1" ,"A2", "G431")
+    test_rssi, test_pos = getData('testPoints.xlsx', "Average",  "A2", "G19")
     training_X = np.array(base_rssi)
     training_Y = np.array(base_pos)
     test_X = np.array(test_rssi)
     reg = MLPRegressor(solver='lbfgs', activation='identity', hidden_layer_sizes=(100,))
     reg.fit(training_X, training_Y)
-    pred_y_test = reg.predict(test_X)
     for i in range(0,18):
-        error = np.sqrt((pred_y_test[i][0] - test_pos[i][0])**2 + (pred_y_test[i][1] - test_pos[i][1])**2)
-        print(error)
-    print(pred_y_test, test_pos)
-
-def main():
-    
-    SVM()
-    
+        start = time.time()
+        pred_y_test = reg.predict(test_X[i].reshape(1,-1))
+        duration = time.time() - start
+        error = np.sqrt((pred_y_test[0][0] - test_pos[i][0])**2 + (pred_y_test[0][1] - test_pos[i][1])**2)
+        data = []
+        data.extend(test_pos[i])
+        data.extend(pred_y_test[0])
+        data.append(duration)
+        data.append(error)
+        storeData(data,"FingerNN")
+        
 if __name__== "__main__":
         main()

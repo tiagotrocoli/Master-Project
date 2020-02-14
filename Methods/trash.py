@@ -4,7 +4,7 @@ import locale
 path    = 'dataBase.xlsx'
 wbk     = load_workbook(path)
 sheet   = wbk["Sheet1"]
-cells   = sheet['A2': 'H261']
+cells   = sheet['A262': 'H431']
 
 i = -1
 l_rssi = []
@@ -34,7 +34,9 @@ for pos1, pos2, c1, c2, c3, c4, c5, c6 in cells:
         l_rssi[5].append(sum[5]/10)
         sum[0] = sum[1] = sum[2] = sum[3] = sum[4] = sum[5] = 0
 
-#print('\n'.join(str(x) for x in position[0]))
+print('\n'.join(str(x) for x in position[0]))
+print("---------------------------")
+print('\n'.join(str(x) for x in position[1]))
 print("---------------------------")
 print('\n'.join(str(x) for x in l_rssi[0]))
 print("---------------------------")

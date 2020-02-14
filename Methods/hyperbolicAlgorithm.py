@@ -55,12 +55,12 @@ def getTestData(path):
 
 def hyperbolicAlgorithm(rssi):
     
-    d.append(findDistance(-43.9475, 1.4152, rssi[0]) )
-    d.append(findDistance(-34.2028, 1.8470, rssi[1]))
-    d.append(findDistance(-32.1226, 2.067, rssi[2]))
-    d.append(findDistance(-40.3671, 2.0823, rssi[3]))
-    d.append(findDistance(-32.8183, 2.0228,rssi[4]))
-    #d.append(findDistance(-41.6982, 1.1648, rssi[5]))
+    d.append(findDistance(-45.3552, 1.3843, rssi[0]) )
+    d.append(findDistance(-34.2081, 1.9272, rssi[1]))
+    d.append(findDistance(-33.6740, 2.2884, rssi[2]))
+    d.append(findDistance(-40.0409, 2.2704, rssi[3]))
+    d.append(findDistance(-35.9165, 1.9421,rssi[4]))
+    #d.append(findDistance(-41.9144, 1.3344, rssi[5]))
     
     A = np.matrix([[ 2*(x[2] - x[0]), 2*(y[2] - y[0]) ], 
                    [ 2*(x[2] - x[1]), 2*(y[2] - y[1]) ],
