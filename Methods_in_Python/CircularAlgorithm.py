@@ -92,12 +92,12 @@ def main():
         res = circularAlgorithm(rssi)
         duration = time.time() - start
         # calculate precision
-        precision = math.sqrt( (position[i][0] - res[0])**2 + (position[i][1] - res[1])**2 )
+        accuracy = math.sqrt( (position[i][0] - res[0])**2 + (position[i][1] - res[1])**2 )
         # put them together
         data = [position[i][0], position[i][1]]
         data.extend(res)
         data.append(duration)
-        data.append(precision)
+        data.append(accuracy)
         # store in xlsx
         storeData(data,"CircularAlgo")
     

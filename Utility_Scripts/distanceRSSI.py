@@ -1,22 +1,24 @@
 from openpyxl import load_workbook
 import os
 
-def storeData(data,sheetName):
-    path    = "dataBase.xlsx"
-    wbk     = load_workbook(path)
-    page    = wbk[sheetName]
-    page.append(data)
-    wbk.save(path)
-
-path = 'RSSI/'
+path = "../Data/"
 start   = [3,14,25,36,47,58]
 end     = [13,24,35,46,57,68]
 j       = -1
 wifis = ["TiagoLocalizacao1", "TiagoLocalizacao2", "TiagoLocalizacao0", "TiagoLocalizacao3", "TiagoLocalizacao4", "LSC_HoneyPot"]
 
+
+def storeData(data,sheetName):
+    doc    = "dataBase.xlsx"
+    wbk     = load_workbook(path+doc)
+    page    = wbk[sheetName]
+    page.append(data)
+    wbk.save(path)
+
+
 for net in wifis:
     j = j + 1
-    for filename in os.listdir(path):
+    for filename in os.listdir(path+'RSSI/'):
         file  = open(path+filename, "r")
         lines = file.readlines()
         data = []
