@@ -20,9 +20,11 @@ d           = []
 l_rssi      = []
 position    = []
 
+path = "../Data/"
+
 def storeData(data,sheetName):
-    path    = "methods.xlsx"
-    wbk     = load_workbook(path)
+    doc    = "methods.xlsx"
+    wbk     = load_workbook(path+doc)
     page    = wbk[sheetName]
     page.append(data)
     wbk.save(path)
@@ -31,8 +33,8 @@ def findDistance(a, n, rssi):
     return 10**((a - rssi)/(10*n))
 
 # get position and RSSI from excel
-def getTestData(path):
-    wbk     = load_workbook(path)
+def getTestData(doc):
+    wbk     = load_workbook(path+doc)
     sheet   = wbk["Average"]
     cells   = sheet['A2': 'H19']
     
@@ -53,6 +55,14 @@ def getTestData(path):
         l_rssi[4].append(locale.atof(c5.value))
         l_rssi[5].append(locale.atof(c6.value))
 
+def adjustDistances():
+
+    for i in range(5):
+        if d[i] > 12:
+            d[i] = 12.0
+        elif d[i] < 1:
+            d[i] = 1.0
+
 def hyperbolicAlgorithm(rssi):
     
     d.append(findDistance(-45.3552, 1.3843, rssi[0]) )
@@ -61,6 +71,8 @@ def hyperbolicAlgorithm(rssi):
     d.append(findDistance(-40.0409, 2.2704, rssi[3]))
     d.append(findDistance(-35.9165, 1.9421,rssi[4]))
     #d.append(findDistance(-41.9144, 1.3344, rssi[5]))
+    
+    adjustDistances()
     
     A = np.matrix([[ 2*(x[2] - x[0]), 2*(y[2] - y[0]) ], 
                    [ 2*(x[2] - x[1]), 2*(y[2] - y[1]) ],
@@ -105,8 +117,9 @@ def main():
         data.extend(res)
         data.append(duration)
         data.append(error)
+        print(data)
         # store in xlsx
-        storeData(data,"HyperbolicAlgo")
+        #storeData(data,"HyperbolicAlgo")
     
 if __name__== "__main__":
         main()

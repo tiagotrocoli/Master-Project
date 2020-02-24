@@ -20,6 +20,8 @@ d           = [] # list of distances
 l_rssi      = []
 position    = []
 
+path = "../Data/"
+
 def mse(var):
     sum = 0
     
@@ -29,8 +31,8 @@ def mse(var):
     return sum
 
 def storeData(data,sheetName):
-    path    = "methods.xlsx"
-    wbk     = load_workbook(path)
+    doc    = "methods.xlsx"
+    wbk     = load_workbook(path+doc)
     page    = wbk[sheetName]
     page.append(data)
     wbk.save(path)
@@ -39,8 +41,8 @@ def findDistance(a, n, rssi):
     return 10**((a - rssi)/(10*n))
 
 # get position and RSSI from excel
-def getTestData(path):
-    wbk     = load_workbook(path)
+def getTestData(doc):
+    wbk     = load_workbook(path+doc)
     sheet   = wbk["Average"]
     cells   = sheet['A2': 'H19']
     
@@ -48,7 +50,7 @@ def getTestData(path):
         l_rssi.append([])
     
     i = -1
-    locale.setlocale(locale.LC_ALL, 'en_US.UTF-8')
+    locale.setlocale(locale.LC_ALL, 'en_GB.UTF-8')
     for pos1, pos2, c1, c2, c3, c4, c5, c6 in cells:
         i = i + 1
         position.append([])
@@ -62,6 +64,14 @@ def getTestData(path):
         l_rssi[5].append(locale.atof(c6.value))
 
 
+def adjustDistances():
+
+    for i in range(5):
+        if d[i] > 12:
+            d[i] = 12.0
+        elif d[i] < 1:
+            d[i] = 1.0
+
 def circularAlgorithm(rssi):
     
     d.append(findDistance(-45.3552, 1.3843, rssi[0]) )
@@ -70,6 +80,8 @@ def circularAlgorithm(rssi):
     d.append(findDistance(-40.0409, 2.2704, rssi[3]))
     d.append(findDistance(-35.9165, 1.9421,rssi[4]))
     #d.append(findDistance(-41.9144, 1.3344, rssi[5]))
+    
+    adjustDistances()
     
     #print(rssi)
     #print(d)
@@ -98,8 +110,9 @@ def main():
         data.extend(res)
         data.append(duration)
         data.append(accuracy)
+        print(data)
         # store in xlsx
-        storeData(data,"CircularAlgo")
+        #storeData(data,"CircularAlgo")
     
 if __name__== "__main__":
         main()

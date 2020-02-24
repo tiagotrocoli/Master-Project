@@ -82,7 +82,7 @@ def main():
     
     global i
     m = len(networks)
-    path = 'Results/RSSI/'
+    path = '../Data/RSSI/'
     
     while(i < m):
         dist.append([])
