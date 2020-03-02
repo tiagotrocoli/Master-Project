@@ -40,6 +40,10 @@ def storeData(data,sheetName):
 def findDistance(a, n, rssi):
     return 10**((a - rssi)/(10*n))
 
+def polynomial(rssi, x0, x1, x2, x3, x4):
+    return x0 + x1*rssi + x2*rssi**2 + x3*rssi**3 + x4*rssi**4
+    
+
 # get position and RSSI from excel
 def getTestData(doc):
     wbk     = load_workbook(path+doc)
@@ -72,6 +76,16 @@ def adjustDistances():
         elif d[i] < 1:
             d[i] = 1.0
 
+def estimateDistance(rssi, limits):
+    if rssi < limits[0]:
+        return polynomial(rssi,7.91684950e+05, 5.09508294e+04, 1.22886134e+03, 1.31638431e+01, 5.28442428e-02)
+    elif rssi < limits[1]:
+        return polynomial(rssi,-4.04427956e+06, -2.85550202e+05, -7.55853015e+03, -8.88982335e+01, -3.91980109e-01)
+    elif rssi < limits[2]:
+        return polynomial(rssi,1.55619602e+06, 1.19861197e+05, 3.46015935e+03, 4.43714107e+01, 2.13262950e-01)
+    elif rssi < limits[3]:
+        return polynomial(rssi,-2.04412197e+05, -1.78192802e+04, -5.81752369e+02, -8.42988909e+00, -4.57439907e-02)
+
 def circularAlgorithm(rssi):
     
     d.append(findDistance(-45.3552, 1.3843, rssi[0]) )
@@ -80,6 +94,11 @@ def circularAlgorithm(rssi):
     d.append(findDistance(-40.0409, 2.2704, rssi[3]))
     d.append(findDistance(-35.9165, 1.9421,rssi[4]))
     #d.append(findDistance(-41.9144, 1.3344, rssi[5]))
+    
+    estimateDistance(rssi[0],[-58.6, -53.0, -47.8, -43.5])
+    estimateDistance(rssi[1],[-58.6, -53.0, -47.8, -43.5])
+    estimateDistance(rssi[2],[-58.6, -53.0, -47.8, -43.5])
+    estimateDistance(rssi[3],[-58.6, -53.0, -47.8, -43.5])
     
     adjustDistances()
     
