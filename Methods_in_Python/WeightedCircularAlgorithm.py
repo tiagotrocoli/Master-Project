@@ -20,6 +20,8 @@ d           = [] # list of distances
 l_rssi      = []
 position    = []
 
+path = "../Data/"
+
 weight = [
             [0.54,3.12,2.9,1.16,0.5,4.06],
             [1.34,2.77,2.1,14.32,1.82,1.29],
@@ -46,9 +48,13 @@ i       = 0
 def mse(var):
     sum = 0
     
-    for j in range(0,5):
-        sum = sum + ((1.0/weight[i][j])/(total[i]))*( (x[j] - var[0])**2 + (y[j] - var[1])**2 + (h[j] - 0.73)**2 - d[j]**2)**2
-
+    #sum = sum + ((1.0/weight[i][0])/(total[i]))*( (x[0] - var[0])**2 + (y[0] - var[1])**2 + (h[0] - 0.73)**2 - d[0]**2)**2
+    sum = sum + ((1.0/weight[i][1])/(total[i]))*( (x[1] - var[0])**2 + (y[1] - var[1])**2 + (h[1] - 0.73)**2 - d[1]**2)**2
+    sum = sum + ((1.0/weight[i][2])/(total[i]))*( (x[2] - var[0])**2 + (y[2] - var[1])**2 + (h[2] - 0.73)**2 - d[2]**2)**2
+    sum = sum + ((1.0/weight[i][3])/(total[i]))*( (x[3] - var[0])**2 + (y[3] - var[1])**2 + (h[3] - 0.73)**2 - d[3]**2)**2
+    sum = sum + ((1.0/weight[i][4])/(total[i]))*( (x[4] - var[0])**2 + (y[4] - var[1])**2 + (h[4] - 0.73)**2 - d[4]**2)**2
+    sum = sum + ((1.0/weight[i][5])/(total[i]))*( (x[5] - var[0])**2 + (y[5] - var[1])**2 + (h[5] - 0.73)**2 - d[5]**2)**2
+    
     return sum
 
 def storeData(data,sheetName):
@@ -61,9 +67,13 @@ def storeData(data,sheetName):
 def findDistance(a, n, rssi):
     return 10**((a - rssi)/(10*n))
 
+def polynomial(rssi, x0, x1, x2, x3, x4):
+    return x0 + x1*rssi + x2*rssi**2 + x3*rssi**3 + x4*rssi**4
+
 # get position and RSSI from excel
-def getTestData(path):
-    wbk     = load_workbook(path)
+# get position and RSSI from excel
+def getTestData(doc):
+    wbk     = load_workbook(path+doc)
     sheet   = wbk["Average"]
     cells   = sheet['A2': 'H19']
     
@@ -71,7 +81,7 @@ def getTestData(path):
         l_rssi.append([])
     
     i = -1
-    locale.setlocale(locale.LC_ALL, 'en_US.UTF-8')
+    locale.setlocale(locale.LC_ALL, 'en_GB.UTF-8')
     for pos1, pos2, c1, c2, c3, c4, c5, c6 in cells:
         i = i + 1
         position.append([])
@@ -84,18 +94,36 @@ def getTestData(path):
         l_rssi[4].append(locale.atof(c5.value))
         l_rssi[5].append(locale.atof(c6.value))
 
+def adjustDistances():
 
-def circularAlgorithm(rssi):
-    
+    for i in range(4):
+        if d[i] > 12:
+            d[i] = 12.0
+        elif d[i] < 1:
+            d[i] = 1.0
+
+def lognomal(rssi):
+
     d.append(findDistance(-45.3552, 1.3843, rssi[0]) )
     d.append(findDistance(-34.2081, 1.9272, rssi[1]))
     d.append(findDistance(-33.6740, 2.2884, rssi[2]))
     d.append(findDistance(-40.0409, 2.2704, rssi[3]))
     d.append(findDistance(-35.9165, 1.9421,rssi[4]))
-    #d.append(findDistance(-41.9144, 1.3344, rssi[5]))
+    d.append(findDistance(-41.9144, 1.3344, rssi[5]))
     
-    #print(rssi)
-    #print(d)
+def polyRegression(rssi):    
+    
+    d.append(polynomial(rssi[0],1.90820068e+03,1.39916821e+02,3.80413206e+00,4.54250040e-02,2.01480990e-04))
+    d.append(polynomial(rssi[1],8.03927288e+01,7.86690146e+00,2.73889179e-01,3.94925950e-03,2.06783022e-05))
+    d.append(polynomial(rssi[2],-2.36934558e+01,-1.46667668e+00,-2.52040300e-02,-1.55811131e-04,-1.29126259e-07))
+    d.append(polynomial(rssi[3],3.42350116e+01,1.80886737e+00,2.01219351e-02,-2.59560664e-04,-3.61977580e-06))
+    d.append(polynomial(rssi[4],5.41055459e+02,4.39397008e+01,1.31063670e+00,1.69009265e-02,7.98114859e-05))
+    d.append(polynomial(rssi[5],-2.30666363e+01,-3.59322884e+00,-1.54346312e-01,-2.70287489e-03,-1.65517534e-05))
+
+def circularAlgorithm(rssi):
+    
+    polyRegression(rssi)
+    adjustDistances()
     x0  = np.array([1.0, 1.0])
     res = minimize(mse, x0, method='BFGS', options={'gtol': 1e-8})
     d.clear()
@@ -116,6 +144,7 @@ def main():
             soma = soma + 1.0/(weight[k][p]+tol)
         total.append(soma)
     
+    avg = 0
     while i < n:
         rssi = [l_rssi[0][i],l_rssi[1][i],l_rssi[2][i],l_rssi[3][i],l_rssi[4][i],l_rssi[5][i]]
         #calculate duration
@@ -123,15 +152,18 @@ def main():
         res = circularAlgorithm(rssi)
         duration = time.time() - start
         # calculate precision
-        precision = math.sqrt( (position[i][0] - res[0])**2 + (position[i][1] - res[1])**2 )
+        accuracy = math.sqrt( (position[i][0] - res[0])**2 + (position[i][1] - res[1])**2 )
         # put them together
         data = [position[i][0], position[i][1]]
-        data.extend(res)
-        data.append(duration)
-        data.append(precision)
+        data.extend([round(res[0],8), round(res[1],8)])
+        data.append(round(duration,8))
+        data.append(round(accuracy,8))
+        print (','.join(str(x) for x in data))
+        avg = avg + accuracy
         # store in xlsx
-        storeData(data,"W_CircularAlgo")
+        #storeData(data,"W_CircularAlgo")
         i = i + 1
+    print(avg/18.0)
     
 if __name__== "__main__":
         main()

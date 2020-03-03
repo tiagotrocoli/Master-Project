@@ -25,9 +25,13 @@ path = "../Data/"
 def mse(var):
     sum = 0
     
-    for i in range(0,5):
-        sum = sum + ( (x[i] - var[0])**2 + (y[i] - var[1])**2 + (h[i] - 0.73)**2 - d[i]**2)**2
-
+    #sum = sum + ( (x[0] - var[0])**2 + (y[0] - var[1])**2 + (h[0] - 0.73)**2 - d[0]**2)**2
+    sum = sum + ( (x[1] - var[0])**2 + (y[1] - var[1])**2 + (h[1] - 0.73)**2 - d[1]**2)**2
+    sum = sum + ( (x[2] - var[0])**2 + (y[2] - var[1])**2 + (h[2] - 0.73)**2 - d[2]**2)**2
+    sum = sum + ( (x[3] - var[0])**2 + (y[3] - var[1])**2 + (h[3] - 0.73)**2 - d[3]**2)**2
+    sum = sum + ( (x[4] - var[0])**2 + (y[4] - var[1])**2 + (h[4] - 0.73)**2 - d[4]**2)**2
+    sum = sum + ( (x[5] - var[0])**2 + (y[5] - var[1])**2 + (h[5] - 0.73)**2 - d[5]**2)**2
+    
     return sum
 
 def storeData(data,sheetName):
@@ -68,38 +72,38 @@ def getTestData(doc):
         l_rssi[5].append(locale.atof(c6.value))
 
 
+def polynomial(rssi, x0, x1, x2, x3, x4):
+    return x0 + x1*rssi + x2*rssi**2 + x3*rssi**3 + x4*rssi**4
+
 def adjustDistances():
 
-    for i in range(5):
+    for i in range(4):
         if d[i] > 12:
             d[i] = 12.0
         elif d[i] < 1:
             d[i] = 1.0
 
-def estimateDistance(rssi, limits):
-    if rssi < limits[0]:
-        return polynomial(rssi,7.91684950e+05, 5.09508294e+04, 1.22886134e+03, 1.31638431e+01, 5.28442428e-02)
-    elif rssi < limits[1]:
-        return polynomial(rssi,-4.04427956e+06, -2.85550202e+05, -7.55853015e+03, -8.88982335e+01, -3.91980109e-01)
-    elif rssi < limits[2]:
-        return polynomial(rssi,1.55619602e+06, 1.19861197e+05, 3.46015935e+03, 4.43714107e+01, 2.13262950e-01)
-    elif rssi < limits[3]:
-        return polynomial(rssi,-2.04412197e+05, -1.78192802e+04, -5.81752369e+02, -8.42988909e+00, -4.57439907e-02)
+def lognomal(rssi):
 
-def circularAlgorithm(rssi):
-    
     d.append(findDistance(-45.3552, 1.3843, rssi[0]) )
     d.append(findDistance(-34.2081, 1.9272, rssi[1]))
     d.append(findDistance(-33.6740, 2.2884, rssi[2]))
     d.append(findDistance(-40.0409, 2.2704, rssi[3]))
     d.append(findDistance(-35.9165, 1.9421,rssi[4]))
-    #d.append(findDistance(-41.9144, 1.3344, rssi[5]))
+    d.append(findDistance(-41.9144, 1.3344, rssi[5]))
     
-    estimateDistance(rssi[0],[-58.6, -53.0, -47.8, -43.5])
-    estimateDistance(rssi[1],[-58.6, -53.0, -47.8, -43.5])
-    estimateDistance(rssi[2],[-58.6, -53.0, -47.8, -43.5])
-    estimateDistance(rssi[3],[-58.6, -53.0, -47.8, -43.5])
+def polyRegression(rssi):    
     
+    d.append(polynomial(rssi[0],1.90820068e+03,1.39916821e+02,3.80413206e+00,4.54250040e-02,2.01480990e-04))
+    d.append(polynomial(rssi[1],8.03927288e+01,7.86690146e+00,2.73889179e-01,3.94925950e-03,2.06783022e-05))
+    d.append(polynomial(rssi[2],-2.36934558e+01,-1.46667668e+00,-2.52040300e-02,-1.55811131e-04,-1.29126259e-07))
+    d.append(polynomial(rssi[3],3.42350116e+01,1.80886737e+00,2.01219351e-02,-2.59560664e-04,-3.61977580e-06))
+    d.append(polynomial(rssi[4],5.41055459e+02,4.39397008e+01,1.31063670e+00,1.69009265e-02,7.98114859e-05))
+    d.append(polynomial(rssi[5],-2.30666363e+01,-3.59322884e+00,-1.54346312e-01,-2.70287489e-03,-1.65517534e-05))
+    
+def circularAlgorithm(rssi):
+    
+    polyRegression(rssi)
     adjustDistances()
     
     #print(rssi)
@@ -115,6 +119,7 @@ def main():
     
     getTestData('testPoints.xlsx')
     n = len(position)
+    avg = 0
     
     for i in range(n):
         rssi = [l_rssi[0][i],l_rssi[1][i],l_rssi[2][i],l_rssi[3][i],l_rssi[4][i],l_rssi[5][i]]
@@ -126,12 +131,14 @@ def main():
         accuracy = math.sqrt( (position[i][0] - res[0])**2 + (position[i][1] - res[1])**2 )
         # put them together
         data = [position[i][0], position[i][1]]
-        data.extend(res)
-        data.append(duration)
-        data.append(accuracy)
-        print(data)
+        data.extend([round(res[0],8), round(res[1],8)])
+        data.append(round(duration,8))
+        data.append(round(accuracy,8))
+        print (','.join(str(x) for x in data))
+        avg = avg + accuracy
         # store in xlsx
         #storeData(data,"CircularAlgo")
+    print(avg/18.0)
     
 if __name__== "__main__":
         main()
