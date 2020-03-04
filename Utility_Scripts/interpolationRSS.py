@@ -12,6 +12,7 @@ from scipy.optimize import minimize
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.interpolate import interp1d
+from operator import itemgetter 
 
 i = 0
 rssi = []
@@ -42,17 +43,20 @@ def calibrate():
     return res
 
 def interpolate():
+    
+    index  = list(np.argsort(avg[i]))
+    sort_x = np.array((itemgetter(*index)(avg[i])), dtype = float)
+    sort_y = np.array((itemgetter(*index)(dist[i])),dtype = float)
+    
     x = []
     y = []
-    for j in range(0,30,4):
-        x.append(avg[i][j])
-        y.append(dist[i][j])
-    #x = np.array(x)
-    #y = np.array(y)
-    f2 = interp1d(y,x, kind='cubic', assume_sorted=False, fill_value="extrapolate")
-    xnew = np.linspace(1, 10, num=50, endpoint=True)
-    plt.plot(dist[i],avg[i], 'o', xnew, f2(xnew), '--')
-    plt.axis((1,10,-10,-70))
+    for s in range(len(index)):
+        
+    
+    f2 = interp1d(sort_x,sort_y, kind='linear', assume_sorted=False, fill_value="extrapolate")
+    xnew = np.linspace(-70, -25, num=100, endpoint=True)
+    plt.plot(avg[i],dist[i], 'o', xnew, f2(xnew), '--')
+    plt.axis((-30,-70,0,10))
     plt.show()
     
 def rsme(x):

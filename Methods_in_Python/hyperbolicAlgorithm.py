@@ -27,7 +27,7 @@ def storeData(data,sheetName):
     wbk     = load_workbook(path+doc)
     page    = wbk[sheetName]
     page.append(data)
-    wbk.save(path)
+    wbk.save(path+doc)
 
 def findDistance(a, n, rssi):
     return 10**((a - rssi)/(10*n))
@@ -65,26 +65,26 @@ def adjustDistances():
 
 def hyperbolicAlgorithm(rssi):
     
-    d.append(findDistance(-45.3552, 1.3843, rssi[0]) )
-    d.append(findDistance(-34.2081, 1.9272, rssi[1]))
-    d.append(findDistance(-33.6740, 2.2884, rssi[2]))
-    d.append(findDistance(-40.0409, 2.2704, rssi[3]))
-    d.append(findDistance(-35.9165, 1.9421,rssi[4]))
-    #d.append(findDistance(-41.9144, 1.3344, rssi[5]))
+    d.append(findDistance(-23.1615, 4.3478, rssi[0]) )
+    d.append(findDistance(-2.4133, 5.7772, rssi[1]))
+    d.append(findDistance(90961.0223, 15712.5907, rssi[2]))
+    d.append(findDistance(0.2455, 7.4626, rssi[3]))
+    d.append(findDistance(38.7733, 11.7859,rssi[4]))
+    d.append(findDistance(49.1173, 13.8565, rssi[5]))
     
     adjustDistances()
     
-    A = np.matrix([[ 2*(x[2] - x[0]), 2*(y[2] - y[0]) ], 
-                   [ 2*(x[2] - x[1]), 2*(y[2] - y[1]) ],
-                   [ 2*(x[2] - x[4]), 2*(y[2] - y[4]) ],
-                   [ 2*(x[2] - x[3]), 2*(y[2] - y[3]) ]
-                   #[ 2*(x[5] - x[4]), 2*(y[5] - y[4]) ]
+    A = np.matrix([[ 2*(x[5] - x[0]), 2*(y[5] - y[0]) ], 
+                   [ 2*(x[5] - x[1]), 2*(y[5] - y[1]) ],
+                   [ 2*(x[5] - x[3]), 2*(y[5] - y[3]) ],
+                   [ 2*(x[5] - x[4]), 2*(y[5] - y[4]) ]
+                   #[ 2*(x[4] - x[4]), 2*(y[5] - y[4]) ]
                   ], dtype=np.float64)
     b= np.matrix([
-                [d[0]**2 - d[2]**2 - x[0]**2 - y[0]**2 + x[2]**2 + y[2]**2],
-                [d[1]**2 - d[2]**2 - x[1]**2 - y[1]**2 + x[2]**2 + y[2]**2],
-                [d[4]**2 - d[2]**2 - x[4]**2 - y[4]**2 + x[2]**2 + y[2]**2],
-                [d[3]**2 - d[2]**2 - x[3]**2 - y[3]**2 + x[2]**2 + y[2]**2],
+                [d[0]**2 - d[5]**2 - x[0]**2 - y[0]**2 + x[5]**2 + y[5]**2],
+                [d[1]**2 - d[5]**2 - x[1]**2 - y[1]**2 + x[5]**2 + y[5]**2],
+                [d[3]**2 - d[5]**2 - x[3]**2 - y[3]**2 + x[5]**2 + y[5]**2],
+                [d[4]**2 - d[5]**2 - x[4]**2 - y[4]**2 + x[5]**2 + y[5]**2],
                 #[d[4]**2 - d[4]**2 - x[4]**2 - y[4]**2 + x[4]**2 + y[4]**2]
                 ], dtype=np.float64)
     
@@ -103,7 +103,7 @@ def main():
     
     getTestData('testPoints.xlsx')
     n = len(position)
-    
+    avg = 0
     for i in range(n):
         rssi = [l_rssi[0][i],l_rssi[1][i],l_rssi[2][i],l_rssi[3][i],l_rssi[4][i],l_rssi[5][i]]
         #calculate duration
@@ -113,13 +113,14 @@ def main():
         # calculate precision
         error = math.sqrt( (position[i][0] - res[0])**2 + (position[i][1] - res[1])**2 )
         # put them together
-        data = [position[i][0], position[i][1]]
-        data.extend(res)
-        data.append(duration)
-        data.append(error)
-        print(data)
+        data = [round(position[i][0],8), round(position[i][1],8)]
+        data.extend([round(res[0],8), round(res[1], 8)])
+        data.append(round(duration,8))
+        data.append(round(error,8))
+        print (','.join(str(x) for x in data))
+        avg = avg + error
         # store in xlsx
-        #storeData(data,"HyperbolicAlgo")
-    
+        storeData(data,"HyperbolicAlgo")
+    print(avg/18.0)
 if __name__== "__main__":
         main()

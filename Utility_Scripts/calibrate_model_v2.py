@@ -25,44 +25,59 @@ import matplotlib.pyplot as plt
 i = 0
 rssi = []
 dist = []
+avg  = []
 networks = ['TiagoLocalizacao1','TiagoLocalizacao2','TiagoLocalizacao0','TiagoLocalizacao3', 'TiagoLocalizacao4',"LSC_HoneyPot"]
 
 # mean squared errors
 # x[0] = A, x[1] = n (path-loss coefficient)
 # for each sensor, calibrate...
 def mse(x):
-    sum = 0
-    div = 0
+    
+    total = 0
     n = len(dist[i])
     for j in range(n):
-        m = len(rssi[i][j])
-        div = div + m
-        for k in range(m):
-            sum = sum + ( rssi[i][j][k] -  (x[0] - 10*x[1]*math.log10(dist[i][j])) )**2
-    return sum/div
+        total = total + ( avg[i][j] -  (x[0] - 10*x[1]*math.log10(dist[i][j])) )**2
+    return total/n
+
+def mse1(x):
+    
+    total = 0
+    n = len(dist[i])
+    for j in range(n):
+        total = total + (dist[i][j] - findDistance(x[0], x[1], avg[i][j]))**2
+    return total/n
 
 def calibrate():
     x0 = np.array([1.0, 1.0])
-    res = minimize(mse, x0, method='BFGS', options={'gtol': 1e-8, 'disp': True})
+    res = minimize(mse1, x0, method='BFGS', options={'gtol': 1e-8, 'disp': True})
     return res
+
+def findDistance(a, n, rss):
+    return 10**((a - rss)/(10*n))
 
 def plotModel(x, fun):
     
-    x0 = "{0:.4f}".format(x[0])
-    x1 = "{0:.4f}".format(x[1])
-    
-    rssi_pred = x[0] - 10*x[1]*np.log10(np.sort(dist[i]))
     cost = np.sqrt(fun)
+    print(round(x[0],4),round(x[1],4))
     
     plt.figure(figsize=(16.0,12.0))
     for s in range(len(dist[i])):
-        plt.plot(dist[i][s],[rssi[i][s]],'ko') 
-    plt.plot(np.sort(dist[i]), rssi_pred, color = "k")
-    plt.title(networks[i] + "\nrssi = " + str(x0) + " - 10*" + str(x1) + "*log(d), RSME = " + str(cost) + "\nCalibration using all rssi.")
-    plt.xlabel("Distance (m)")
-    plt.ylabel("RSSI (dBm)")
-    plt.savefig(networks[i]+"_model_all")
-    plt.show()
+        plt.plot(avg[i][s], dist[i][s],'ko')
+        
+    data_x = np.sort(avg[i])
+    xnew = np.linspace(data_x[0], data_x[len(data_x)-1], 100)
+    
+    result = []
+    for l in range(100):
+        result.append(findDistance(x[0],x[1],xnew[l]))
+    
+    plt.plot(xnew, result, color = "k")
+    plt.title("Lognormal Path-loss Model")
+    plt.xlabel("Average of RSS (dBm)")
+    plt.ylabel("Distance (m)")
+    #plt.savefig(networks[i]+"_lognormal")
+    plt.ylim(0,12)
+    #plt.show()
     
 def removeDuplicate(dist,rssi):
     
@@ -87,6 +102,7 @@ def main():
     while(i < m):
         dist.append([])
         rssi.append([])
+        avg.append([])
         k = 0
         for filename in os.listdir(path):
             file  = open(path+filename, "r")
@@ -98,6 +114,8 @@ def main():
             k = k + 1
             
         dist[i], rssi[i] = removeDuplicate(dist[i], rssi[i])
+        for s in range(len(dist[i])):
+            avg[i].append( np.sum(rssi[i][s])/(1.0*len(rssi[i][s])) )
         res = calibrate()
         plotModel(res.x, res.fun)
         i = i + 1

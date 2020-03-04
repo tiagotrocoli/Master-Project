@@ -59,16 +59,17 @@ def plotModel(param):
     data_x = np.sort(avg[i])
     #rssi_pred = x[0] - 10*x[1]*np.log10(np.sort(dist[i]))
     cost = rsme(param)
-    print(cost)
     plt.figure(figsize=(10.0,8.0))
     for s in range(len(dist[i])):
         plt.plot(avg[i][s],dist[i][s],'ko')
     
-    plt.plot(data_x, polynomial(data_x,*param), color = "k")
-    #plt.title(networks[i] + "\nrssi = " + str(x0) + " - 10*" + str(x1) + "*log(d), RSME = " + str(cost) + "\nCalibration using average rssi.")
-    plt.xlabel("Distance (m)")
-    plt.ylabel("Average of RSSI (dBm)")
-    plt.savefig(networks[i]+"_model")
+    xnew = np.linspace(data_x[0], data_x[len(data_x)-1], 100)
+    #print(data_x[0], data_x[len(data_x)-1])
+    plt.plot(xnew, polynomial(xnew,*param), color = "k")
+    plt.title("Polynomial Model")
+    plt.xlabel("Average of RSS (dBm)")
+    plt.ylabel("Distance (m)")
+    plt.savefig(networks[i]+"_Polymodel")
     plt.show()
     
 def removeDuplicate(dist,rssi):

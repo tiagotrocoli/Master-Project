@@ -48,9 +48,9 @@ i       = 0
 def mse(var):
     sum = 0
     
-    #sum = sum + ((1.0/weight[i][0])/(total[i]))*( (x[0] - var[0])**2 + (y[0] - var[1])**2 + (h[0] - 0.73)**2 - d[0]**2)**2
+    sum = sum + ((1.0/weight[i][0])/(total[i]))*( (x[0] - var[0])**2 + (y[0] - var[1])**2 + (h[0] - 0.73)**2 - d[0]**2)**2
     sum = sum + ((1.0/weight[i][1])/(total[i]))*( (x[1] - var[0])**2 + (y[1] - var[1])**2 + (h[1] - 0.73)**2 - d[1]**2)**2
-    sum = sum + ((1.0/weight[i][2])/(total[i]))*( (x[2] - var[0])**2 + (y[2] - var[1])**2 + (h[2] - 0.73)**2 - d[2]**2)**2
+    #sum = sum + ((1.0/weight[i][2])/(total[i]))*( (x[2] - var[0])**2 + (y[2] - var[1])**2 + (h[2] - 0.73)**2 - d[2]**2)**2
     sum = sum + ((1.0/weight[i][3])/(total[i]))*( (x[3] - var[0])**2 + (y[3] - var[1])**2 + (h[3] - 0.73)**2 - d[3]**2)**2
     sum = sum + ((1.0/weight[i][4])/(total[i]))*( (x[4] - var[0])**2 + (y[4] - var[1])**2 + (h[4] - 0.73)**2 - d[4]**2)**2
     sum = sum + ((1.0/weight[i][5])/(total[i]))*( (x[5] - var[0])**2 + (y[5] - var[1])**2 + (h[5] - 0.73)**2 - d[5]**2)**2
@@ -58,11 +58,11 @@ def mse(var):
     return sum
 
 def storeData(data,sheetName):
-    path    = "methods.xlsx"
-    wbk     = load_workbook(path)
+    doc    = "methods.xlsx"
+    wbk     = load_workbook(path+doc)
     page    = wbk[sheetName]
     page.append(data)
-    wbk.save(path)
+    wbk.save(path+doc)
 
 def findDistance(a, n, rssi):
     return 10**((a - rssi)/(10*n))
@@ -104,12 +104,12 @@ def adjustDistances():
 
 def lognomal(rssi):
 
-    d.append(findDistance(-45.3552, 1.3843, rssi[0]) )
-    d.append(findDistance(-34.2081, 1.9272, rssi[1]))
-    d.append(findDistance(-33.6740, 2.2884, rssi[2]))
-    d.append(findDistance(-40.0409, 2.2704, rssi[3]))
-    d.append(findDistance(-35.9165, 1.9421,rssi[4]))
-    d.append(findDistance(-41.9144, 1.3344, rssi[5]))
+    d.append(findDistance(-23.1615, 4.3478, rssi[0]) )
+    d.append(findDistance(-2.4133, 5.7772, rssi[1]))
+    d.append(findDistance(90961.0223, 15712.5907, rssi[2]))
+    d.append(findDistance(0.2455, 7.4626, rssi[3]))
+    d.append(findDistance(38.7733, 11.7859,rssi[4]))
+    d.append(findDistance(49.1173, 13.8565, rssi[5]))
     
 def polyRegression(rssi):    
     
@@ -122,7 +122,7 @@ def polyRegression(rssi):
 
 def circularAlgorithm(rssi):
     
-    polyRegression(rssi)
+    lognomal(rssi)
     adjustDistances()
     x0  = np.array([1.0, 1.0])
     res = minimize(mse, x0, method='BFGS', options={'gtol': 1e-8})
@@ -158,10 +158,10 @@ def main():
         data.extend([round(res[0],8), round(res[1],8)])
         data.append(round(duration,8))
         data.append(round(accuracy,8))
-        print (','.join(str(x) for x in data))
+        #print (','.join(str(x) for x in data))
         avg = avg + accuracy
         # store in xlsx
-        #storeData(data,"W_CircularAlgo")
+        storeData(data,"W_CircularAlgo")
         i = i + 1
     print(avg/18.0)
     
