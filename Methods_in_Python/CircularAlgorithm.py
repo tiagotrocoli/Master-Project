@@ -25,9 +25,9 @@ path = "../Data/"
 def mse(var):
     sum = 0
     
-    sum = sum + ( (x[0] - var[0])**2 + (y[0] - var[1])**2 + (h[0] - 0.73)**2 - d[0]**2)**2
+    #sum = sum + ( (x[0] - var[0])**2 + (y[0] - var[1])**2 + (h[0] - 0.73)**2 - d[0]**2)**2
     sum = sum + ( (x[1] - var[0])**2 + (y[1] - var[1])**2 + (h[1] - 0.73)**2 - d[1]**2)**2
-    #sum = sum + ( (x[2] - var[0])**2 + (y[2] - var[1])**2 + (h[2] - 0.73)**2 - d[2]**2)**2
+    sum = sum + ( (x[2] - var[0])**2 + (y[2] - var[1])**2 + (h[2] - 0.73)**2 - d[2]**2)**2
     sum = sum + ( (x[3] - var[0])**2 + (y[3] - var[1])**2 + (h[3] - 0.73)**2 - d[3]**2)**2
     sum = sum + ( (x[4] - var[0])**2 + (y[4] - var[1])**2 + (h[4] - 0.73)**2 - d[4]**2)**2
     sum = sum + ( (x[5] - var[0])**2 + (y[5] - var[1])**2 + (h[5] - 0.73)**2 - d[5]**2)**2
@@ -72,12 +72,9 @@ def getTestData(doc):
         l_rssi[5].append(locale.atof(c6.value))
 
 
-def polynomial(rssi, x0, x1, x2, x3, x4):
-    return x0 + x1*rssi + x2*rssi**2 + x3*rssi**3 + x4*rssi**4
-
 def adjustDistances():
 
-    for i in range(4):
+    for i in range(6):
         if d[i] > 12:
             d[i] = 12.0
         elif d[i] < 1:
@@ -87,7 +84,7 @@ def lognomal(rssi):
 
     d.append(findDistance(-23.1615, 4.3478, rssi[0]) )
     d.append(findDistance(-2.4133, 5.7772, rssi[1]))
-    d.append(findDistance(90961.0223, 15712.5907, rssi[2]))
+    d.append(findDistance(52.6093, 14.6044, rssi[2]))
     d.append(findDistance(0.2455, 7.4626, rssi[3]))
     d.append(findDistance(38.7733, 11.7859,rssi[4]))
     d.append(findDistance(49.1173, 13.8565, rssi[5]))
@@ -103,7 +100,7 @@ def polyRegression(rssi):
     
 def circularAlgorithm(rssi):
     
-    lognomal(rssi)
+    polyRegression(rssi)
     adjustDistances()
     
     #print(rssi)
@@ -134,10 +131,10 @@ def main():
         data.extend([round(res[0],8), round(res[1],8)])
         data.append(round(duration,8))
         data.append(round(accuracy,8))
-        #print (','.join(str(x) for x in data))
+        print (','.join(str(x) for x in data))
         avg = avg + accuracy
         # store in xlsx
-        storeData(data,"CircularAlgo")
+        #storeData(data,"MultPoly4")
     print(avg/18.0)
     
 if __name__== "__main__":

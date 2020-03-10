@@ -1,12 +1,10 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Created on Mon Jan 27 13:33:54 2020
+Created on Mon Mar  9 20:41:27 2020
 
-@author: mister-c
+@author: tiago
 """
-
-# Calibration using the average points of RSSI.
 
 import os
 import math
@@ -26,8 +24,9 @@ networks = ['TiagoLocalizacao1','TiagoLocalizacao2','TiagoLocalizacao0','TiagoLo
 # x[0] = A, x[1] = n (path-loss coefficient)
 # for each sensor, calibrate...
 
-def polynomial(rssi, x0, x1, x2, x3, x4):
-    return x0 + x1*rssi + x2*rssi**2 + x3*rssi**3 + x4*rssi**4
+def lognormal(rssi, a, n):
+    return 10**((a - rssi)/(10*n))
+
 
 def calibrate():
     
@@ -36,8 +35,8 @@ def calibrate():
     sort_y = np.array((itemgetter(*index)(dist[i])),dtype = float)
     
     
-    init_vals = [1.0,1.0,1.0,1.0,1.0]
-    param, _  = optimize.curve_fit(polynomial, sort_x, sort_y, p0 = init_vals)
+    init_vals = [1.0,1.0]
+    param, _  = optimize.curve_fit(lognormal, sort_x, sort_y, p0 = init_vals)
     
     return param
    
@@ -45,7 +44,7 @@ def rsme(param):
     sum = 0
     n = len(dist[i])
     for j in range(n):
-        sum = sum + ( dist[i][j] -  polynomial(avg[i][j], *param ))**2
+        sum = sum + ( dist[i][j] -  lognormal(avg[i][j], *param ))**2
     return np.sqrt(sum/n)
 
 def plotModel(param):
@@ -55,14 +54,15 @@ def plotModel(param):
     plt.figure(figsize=(10.0,8.0))
     for s in range(len(dist[i])):
         plt.plot(avg[i][s],dist[i][s],'ko')
+    
     print(cost)
     xnew = np.linspace(data_x[0], data_x[len(data_x)-1], 100)
-    #print(data_x[0], data_x[len(data_x)-1])
-    plt.plot(xnew, polynomial(xnew,*param), color = "k")
-    plt.title("Polynomial Model")
+    print(*param)
+    plt.plot(xnew, lognormal(xnew,*param), color = "k")
+    plt.title("Lognomal path-loss model")
     plt.xlabel("Average of RSS (dBm)")
     plt.ylabel("Distance (m)")
-    #plt.savefig(networks[i]+"_Polymodel")
+    plt.savefig(networks[i]+"_lognormal")
     plt.show()
     
 def removeDuplicate(dist,rssi):
