@@ -45,7 +45,7 @@ def rsme(param):
     n = len(dist[i])
     for j in range(n):
         sum = sum + ( dist[i][j] -  lognormal(avg[i][j], *param ))**2
-    return np.sqrt(sum/n)
+    return sum/n
 
 def plotModel(param):
         
@@ -57,13 +57,13 @@ def plotModel(param):
     
     print(cost)
     xnew = np.linspace(data_x[0], data_x[len(data_x)-1], 100)
-    print(*param)
-    plt.plot(xnew, lognormal(xnew,*param), color = "k")
-    plt.title("Lognomal path-loss model")
-    plt.xlabel("Average of RSS (dBm)")
-    plt.ylabel("Distance (m)")
-    plt.savefig(networks[i]+"_lognormal")
-    plt.show()
+    #print(*param)
+    #plt.plot(xnew, lognormal(xnew,*param), color = "k")
+    #plt.title("Lognomal path-loss model")
+    #plt.xlabel("Average of RSS (dBm)")
+    #plt.ylabel("Distance (m)")
+    #plt.savefig(networks[i]+"_lognormal")
+    #plt.show()
     
 def removeDuplicate(dist,rssi):
     

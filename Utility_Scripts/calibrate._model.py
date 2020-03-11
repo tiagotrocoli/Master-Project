@@ -58,12 +58,12 @@ def plotModel(param):
     print(cost)
     xnew = np.linspace(data_x[0], data_x[len(data_x)-1], 100)
     #print(data_x[0], data_x[len(data_x)-1])
-    plt.plot(xnew, polynomial(xnew,*param), color = "k")
-    plt.title("Polynomial Model")
-    plt.xlabel("Average of RSS (dBm)")
-    plt.ylabel("Distance (m)")
+    #plt.plot(xnew, polynomial(xnew,*param), color = "k")
+    #plt.title("Polynomial Model")
+    #plt.xlabel("Average of RSS (dBm)")
+    #plt.ylabel("Distance (m)")
     #plt.savefig(networks[i]+"_Polymodel")
-    plt.show()
+    #plt.show()
     
 def removeDuplicate(dist,rssi):
     
