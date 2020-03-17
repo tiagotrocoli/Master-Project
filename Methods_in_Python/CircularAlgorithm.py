@@ -101,7 +101,6 @@ def polyRegression(rssi):
 def circularAlgorithm(rssi):
     
     polyRegression(rssi)
-    adjustDistances()
     
     #print(rssi)
     #print(d)
@@ -134,7 +133,7 @@ def main():
         print (','.join(str(x) for x in data))
         avg = avg + accuracy
         # store in xlsx
-        storeData(data,"MultPoly")
+        #storeData(data,"MultPoly")
     print(avg/18.0)
     
 if __name__== "__main__":

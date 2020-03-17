@@ -88,7 +88,6 @@ def polyRegression(rssi):
 def hyperbolicAlgorithm(rssi):
     
     polyRegression(rssi)
-    adjustDistances()
     
     A = np.matrix([[ 2*(x[5] - x[0]), 2*(y[5] - y[0]) ], 
                    [ 2*(x[5] - x[1]), 2*(y[5] - y[1]) ],
@@ -134,11 +133,14 @@ def hyperbolicAlgorithm1(rssi):
                 #[d[4]**2 - d[4]**2 - x[4]**2 - y[4]**2 + x[4]**2 + y[4]**2]
                 ], dtype=np.float64)
     
+    I = np.identity(2, dtype = float)
+    a = 0.1
+    
     AT  = A.transpose()
     AAT = AT.dot(A)
     d.clear()
     try:
-        var = (inv(AAT)*AT*b).tolist()
+        var = (inv(AAT - a*I)*AT*b).tolist()
         return [var[0][0], var[1][0]]
     except:
         print("Could not solve since matrix has no inverse.")
@@ -150,8 +152,6 @@ def main():
     getTestData('testPoints.xlsx')
     n = len(position)
     avg = 0
-
-    perm = permutations([1,2,3,4,5,6])
 
     for i in range(n):
         rssi = [l_rssi[0][i],l_rssi[1][i],l_rssi[2][i],l_rssi[3][i],l_rssi[4][i],l_rssi[5][i]]
@@ -169,7 +169,7 @@ def main():
         print (','.join(str(x) for x in data))
         avg = avg + error
         # store in xlsx
-        storeData(data,"HyperbolicAlgoPoly")
+        #storeData(data,"HyperbolicAlgo")
     print(avg/18.0)
 if __name__== "__main__":
         main()

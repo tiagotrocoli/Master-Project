@@ -19,15 +19,17 @@ y           = [2.6,13.0,6.5, 10.4, 3.9, 7.8]
 h           = [0.76, 1.7, 1.65, 1.17, 2.02, 1.52]
 
 
+path = "../Data/"
+
 def storeData(data,sheetName):
-    path    = "methods.xlsx"
-    wbk     = load_workbook(path)
+    doc    = "methods.xlsx"
+    wbk     = load_workbook(path+doc)
     page    = wbk[sheetName]
     page.append(data)
-    wbk.save(path)
+    wbk.save(path+doc)
 
-def getData(path, page, ini, end):
-    wbk     = load_workbook(path)
+def getData(doc, page, ini, end):
+    wbk     = load_workbook(path+doc)
     sheet   = wbk[page]
     cells   = sheet[ini : end]
     
@@ -47,8 +49,9 @@ def getData(path, page, ini, end):
 
 def main():
     
-    n = int(sys.argv[1])
-    
+    #n = int(sys.argv[1])
+    comb = [1,2,3,4]
+    n = len(comb)
     # get list of rssi and list of position, respectivelly
     l_base, base_pos = getData('dataBase.xlsx',"Average" ,"A2", "H44")
     l_test, test_pos = getData('testPoints.xlsx', "Average",  "A2", "H19")
@@ -61,7 +64,10 @@ def main():
         cost = []
         start = time.time()
         for i in range(43):
-            cost.append((point[0] - l_base[i][0])**2 + (point[1] - l_base[i][1])**2 + (point[2] - l_base[i][2])**2 + (point[3] - l_base[i][3])**2 + (point[4] - l_base[i][4])**2)
+            total = 0
+            for r in range(n):
+                total = total + (point[comb[r]] - l_base[i][comb[r]])**2
+            cost.append(total)
         # return a list of index of sorted cost
         index = np.argsort(cost)
         # set the weight
@@ -83,7 +89,7 @@ def main():
         data.append(duration)
         data.append(error)
         # store in xlsx
-        storeData(data, "WeightedFingerKnn"+str(n))
+        #storeData(data, "WeightedFingerKnn"+str(n))
         
         
 if __name__== "__main__":

@@ -14,11 +14,13 @@ import math
 import numpy as np
 import locale
 from openpyxl import load_workbook
+from sklearn import svm
 
 x           = [4.4, 2.2, 0, 6.6, 0, 6.6]
 y           = [2.6,13.0,6.5, 10.4, 3.9, 7.8]
 h           = [0.76, 1.7, 1.65, 1.17, 2.02, 1.52]
 
+path = "../Data/"
 
 def storeData(data,sheetName):
     path    = "methods.xlsx"
@@ -27,8 +29,8 @@ def storeData(data,sheetName):
     page.append(data)
     wbk.save(path)
 
-def getData(path, page, ini, end):
-    wbk     = load_workbook(path)
+def getData(doc, page, ini, end):
+    wbk     = load_workbook(path+doc)
     sheet   = wbk[page]
     cells   = sheet[ini : end]
     
@@ -48,24 +50,27 @@ def getData(path, page, ini, end):
 
 def main():
     
+    avg = 0
     base_rssi, base_pos = getData('dataBase.xlsx',"Sheet1" ,"A2", "G431")
     test_rssi, test_pos = getData('testPoints.xlsx', "Average",  "A2", "G19")
     training_X = np.array(base_rssi)
     training_Y = np.array(base_pos)
     test_X = np.array(test_rssi)
-    reg = MLPRegressor(solver='lbfgs', activation='identity', hidden_layer_sizes=(100,))
+    reg = MLPRegressor(solver='lbfgs', activation='identity', hidden_layer_sizes=(10,))
     reg.fit(training_X, training_Y)
     for i in range(0,18):
         start = time.time()
         pred_y_test = reg.predict(test_X[i].reshape(1,-1))
         duration = time.time() - start
-        error = np.sqrt((pred_y_test[0][0] - test_pos[i][0])**2 + (pred_y_test[0][1] - test_pos[i][1])**2)
+        accuracy = np.sqrt((pred_y_test[0][0] - test_pos[i][0])**2 + (pred_y_test[0][1] - test_pos[i][1])**2)
         data = []
         data.extend(test_pos[i])
         data.extend(pred_y_test[0])
         data.append(duration)
-        data.append(error)
-        storeData(data,"FingerNN")
-        
+        data.append(accuracy)
+        avg = avg + accuracy
+        print(data)
+        #storeData(data,"FingerNN")
+    print(avg/18.0)
 if __name__== "__main__":
         main()

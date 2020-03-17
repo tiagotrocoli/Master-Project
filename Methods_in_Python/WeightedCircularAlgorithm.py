@@ -123,8 +123,8 @@ def polyRegression(rssi):
 def circularAlgorithm(rssi):
     
     polyRegression(rssi)
-    adjustDistances()
-    x0  = np.array([1.0, 1.0])
+
+    x0  = np.array([3.0, 1.0])
     res = minimize(mse, x0, method='BFGS', options={'gtol': 1e-8})
     d.clear()
     
@@ -158,10 +158,10 @@ def main():
         data.extend([round(res[0],8), round(res[1],8)])
         data.append(round(duration,8))
         data.append(round(accuracy,8))
-        #print (','.join(str(x) for x in data))
+        print (','.join(str(x) for x in data))
         avg = avg + accuracy
         # store in xlsx
-        storeData(data,"WeightedMultPoly")
+        #storeData(data,"WeightedMultPoly")
         i = i + 1
     print(avg/18.0)
     
