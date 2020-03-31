@@ -57,14 +57,15 @@ def plotModel(param):
         plt.plot(avg[i][s],dist[i][s],'ko')
     print(cost)
     xnew = np.linspace(data_x[0], data_x[len(data_x)-1], 100)
+    print(*param)
     #print(data_x[0], data_x[len(data_x)-1])
-    plt.rcParams.update({'font.size': 20})
-    plt.plot(xnew, polynomial(xnew,*param), color = "k")
-    plt.title("Polynomial Model")
-    plt.xlabel("Average of RSS (dBm)")
-    plt.ylabel("Distance (m)")
-    plt.savefig(networks[i]+"_Polymodel")
-    plt.show()
+    #plt.rcParams.update({'font.size': 20})
+    #plt.plot(xnew, polynomial(xnew,*param), color = "k")
+    #plt.title("Polynomial Model")
+    #plt.xlabel("Average of RSS (dBm)")
+    #plt.ylabel("Distance (m)")
+    #plt.savefig(networks[i]+"_Polymodel")
+    #plt.show()
     
 def removeDuplicate(dist,rssi):
     

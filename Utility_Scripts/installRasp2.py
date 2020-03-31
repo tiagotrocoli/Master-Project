@@ -1,0 +1,7 @@
+print("11")
+os.system("sudo nano /etc/sysctl.conf")
+print("12")
+os.system("sudo iptables -t nat -A  POSTROUTING -o eth0 -j MASQUERADE")
+os.system('sudo sh -c "iptables-save > /etc/iptables.ipv4.nat"')
+print("13")
+os.system("sudo cat iptable.txt >> /etc/rc.local")

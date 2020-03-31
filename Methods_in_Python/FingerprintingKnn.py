@@ -25,6 +25,25 @@ def storeData(data,sheetName):
     page.append(data)
     wbk.save(path+doc)
 
+def getData2(doc, page, ini, end):
+    wbk     = load_workbook(path+doc)
+    sheet   = wbk[page]
+    cells   = sheet[ini : end]
+    
+    position = []
+    row = []
+
+    i = -1
+    locale.setlocale(locale.LC_ALL, 'en_US.UTF-8')
+    for pos1, pos2, c1, c2, c3, c4, c5, c6 in cells:
+        i = i + 1
+        position.append([])
+        position[i].append(pos1.value)
+        position[i].append(pos2.value)
+        row.append([c1.value, c2.value, c3.value, c4.value, c5.value, c6.value])
+
+    return row, position
+
 def getData(doc, page, ini, end):
     wbk     = load_workbook(path+doc)
     sheet   = wbk[page]
@@ -41,24 +60,25 @@ def getData(doc, page, ini, end):
         position[i].append(locale.atof(pos1.value))
         position[i].append(locale.atof(pos2.value))
         row.append([locale.atof(c1.value), locale.atof(c2.value), locale.atof(c3.value), locale.atof(c4.value), locale.atof(c5.value)])
-    
+        
     return row, position
 
 def main():
     
     #n = int(sys.argv[1])
-    comb = [1,2,3,4]
+    comb = [0,3,5]
     n = len(comb)
-    l_base, base_pos = getData('dataBase.xlsx',"Average" ,"A2", "H44")
-    l_test, test_pos = getData('testPoints.xlsx', "Average",  "A2", "H19")
-    
+    l_base, base_pos = getData2('dataBase.xlsx',"Experiment2" ,"A2", "H38")
+    l_test, test_pos = getData2('testPoints.xlsx', "Experiment2",  "A2", "H18")
+
     k = -1
+    avg = 0
     for point in l_test:
         k = k + 1
         cost = []
         # execute Fingerpriting and calculate its processing time
         start = time.time()
-        for i in range(43):
+        for i in range(37):
             total = 0
             for r in range(n):
                 total = total + (point[comb[r]] - l_base[i][comb[r]])**2
@@ -80,8 +100,11 @@ def main():
         data.extend(estimate)
         data.append(duration)
         data.append(error)
+        avg = avg + error
+        print(data)
         # store in xlsx
-        storeData(data, "FingerKnn"+str(n))
+        #storeData(data, "FingerKnn"+str(n))
+    print(avg/17.0)
         
 if __name__== "__main__":
         main()

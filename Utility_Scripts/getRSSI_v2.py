@@ -63,7 +63,7 @@ def main():
 		                        line = strcmd[k].split()
 		                        f.write(line[0]+"\n")
                                 break
-                time.sleep(2)
+                time.sleep(1)
 
 		i = i + 1
 		print("End.")
