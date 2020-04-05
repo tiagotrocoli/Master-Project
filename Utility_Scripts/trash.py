@@ -2,6 +2,97 @@ import matplotlib.pyplot as plt; plt.rcdefaults()
 import numpy as np
 import matplotlib.pyplot as plt
 
+def bar_char_anchor_exp2_2():
+    anchors = ['1', '2', '3', '4']
+    y_pos = np.arange(len(anchors))
+    performance = [1.38, 1.57, 2.06, 1.90]
+    
+    plt.rcParams.update({'font.size': 14})
+    plt.bar(y_pos, performance, align='center', alpha=0.5, color='k')
+    plt.xticks(y_pos, anchors)
+    plt.ylabel('Average localization error (m)')
+    plt.xlabel('Multilateration')
+    #plt.title('RMSE (m)')
+    plt.savefig("bar_chart_lognormal_exp22")
+    plt.show()
+
+def bar_char_anchor_exp2():
+    anchors = ['1', '2', '3', '4', '5', '6']
+    y_pos = np.arange(len(anchors))
+    performance = [1.6801697306266985,
+    		       1.5583027605847282,
+                   1.4214742615412228,
+                   1.1755392390729282,
+                   1.3880282610664476,
+                   1.2113879672043495]
+    
+    plt.rcParams.update({'font.size': 14})
+    plt.bar(y_pos, performance, align='center', alpha=0.5, color='k')
+    plt.xticks(y_pos, [])
+    plt.ylabel('RMSE (m)')
+    plt.xlabel('Anchor Node')
+    #plt.title('RMSE (m)')
+    plt.savefig("bar_chart_lognormal_exp2")
+    plt.show()
+
+def bar_char_mult_exp2():
+    labels = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17']
+    y_pos = np.arange(len(labels))
+    error = [1.28791592,1.09327139,1.14194521,1.7186473,0.0084993,0.65162382,2.19822207,0.72593991,0.87119246,0.83637628,0.6497893,2.49048065,2.17903371,1.37229802,1.15868098,2.5094098,2.65714715]
+    
+    plt.rcParams.update({'font.size': 14})
+    plt.bar(y_pos, error, align='center', alpha=0.5, color='k')
+    plt.xticks(y_pos, [])
+    plt.ylabel('Localization error (m)')
+    plt.xlabel('Test point')
+    #plt.title('Mean Squared Error (m)')
+    plt.savefig("acc_mult_exp2")
+    plt.show()
+
+def bar_char_exp2():
+    objects = ['1', '2', '3', '4', '5', '6']
+    y_pos = np.arange(len(objects))
+    performance = [1.71,1.36, 1.09, 0.97, 1.00, 1.05]
+    
+    bars = plt.bar(y_pos, performance, align='center', alpha=0.5, color='k')
+    plt.rcParams.update({'font.size': 14})
+    autolabel(plt, bars)
+    plt.rcParams.update({'font.size': 14})
+    plt.xticks(y_pos, objects)
+    plt.ylabel('Average locaizatoin error (m)', fontsize=14)
+    plt.xlabel('Fingerpriting', fontsize=14)
+    #plt.title('RMSE (m)')
+    plt.savefig("exp2_Finger")
+    plt.show()
+
+def bar_char_exp2_1():
+    labels = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17']
+    y_pos = np.arange(len(labels))
+    error = [1.19,0.57,0.42,1.08,0.59,0.13,0.4,0.75,0.59,1.44,1.75,0.77,1,1.1,1.77,0.55,3.79]
+    
+    plt.rcParams.update({'font.size': 14})
+    plt.bar(y_pos, error, align='center', alpha=0.5, color='k')
+    plt.xticks(y_pos, [])
+    plt.ylabel('Localization error (m)')
+    plt.xlabel('Test point')
+    #plt.title('Mean Squared Error (m)')
+    plt.savefig("acc_exp2_1")
+    plt.show()
+
+def bar_char_sig_var1():
+    labels = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18']
+    y_pos = np.arange(len(labels))
+    varr = [0.54,1.34,3.73,3.88,5.16,5.38,1.73,4.01,1.6,0.67,4.01,1.29,2.77,1.38,0.94,1.43,0.77,5.82]
+    
+    plt.rcParams.update({'font.size': 14})
+    plt.bar(y_pos, varr, align='center', alpha=0.5, color='k')
+    plt.xticks(y_pos, [])
+    plt.ylabel('Signal variance (dbm)')
+    plt.xlabel('Test point')
+    #plt.title('Mean Squared Error (m)')
+    plt.savefig("bar_signal_var_1")
+    plt.show()
+
 def bar_char_comparisionMult():
     objects = ('1', '2', '3', '4')
     y_pos = np.arange(len(objects))
@@ -305,6 +396,13 @@ def main():
     #points_x_y_log()
     #group_bar_chart_fing()
     #points_x_y_poly()
-    bar_char_comparisionMult()
+    #bar_char_comparisionMult()
+    #bar_char_sig_var1()
+    #bar_char_exp2_1()
+    #bar_char_exp2()
+    #bar_char_mult_exp2()
+    #bar_char_anchor_exp2()
+    bar_char_anchor_exp2_2()
+    
 if __name__== "__main__":
     main()

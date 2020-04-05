@@ -11,6 +11,7 @@ import time
 import math
 import locale
 from openpyxl import load_workbook
+from itertools import permutations 
 
 x           = [4.4, 2.2, 0, 6.6, 0, 6.6]
 y           = [2.6,13.0,6.5, 10.4, 3.9, 7.8]
@@ -66,45 +67,49 @@ def getData(doc, page, ini, end):
 def main():
     
     #n = int(sys.argv[1])
-    comb = [0,3,5]
-    n = len(comb)
+    #comb = [0,1,2]
+    #n = len(comb)
+    
+    combs = permutations([0,1,2,3,4,5], 4)
+    n = 4
     l_base, base_pos = getData2('dataBase.xlsx',"Experiment2" ,"A2", "H38")
     l_test, test_pos = getData2('testPoints.xlsx', "Experiment2",  "A2", "H18")
-
-    k = -1
-    avg = 0
-    for point in l_test:
-        k = k + 1
-        cost = []
-        # execute Fingerpriting and calculate its processing time
-        start = time.time()
-        for i in range(37):
-            total = 0
-            for r in range(n):
-                total = total + (point[comb[r]] - l_base[i][comb[r]])**2
-            cost.append(total)
-        # sort cost and index of base_pos accordingly
-        pos = [x for _,x in sorted(zip(cost,base_pos))]
-        x = y = 0
-        for j in range(n):
-            x = x + pos[j][0]
-            y = y + pos[j][1]
-        x = x/(1.0*n)
-        y = y/(1.0*n)
-        duration = time.time() - start
-        estimate = [round(x, 2),round(y, 2)]
-        # calculate error
-        error = math.sqrt((estimate[0] - test_pos[k][0])**2 + (estimate[1] - test_pos[k][1])**2)
-        # put them together
-        data = [test_pos[k][0], test_pos[k][1]]
-        data.extend(estimate)
-        data.append(duration)
-        data.append(error)
-        avg = avg + error
-        print(data)
-        # store in xlsx
-        #storeData(data, "FingerKnn"+str(n))
-    print(avg/17.0)
+    
+    for comb in combs:
+        k = -1
+        avg = 0
+        for point in l_test:
+            k = k + 1
+            cost = []
+            # execute Fingerpriting and calculate its processing time
+            start = time.time()
+            for i in range(37):
+                total = 0
+                for r in range(n):
+                    total = total + (point[comb[r]] - l_base[i][comb[r]])**2
+                cost.append(total)
+            # sort cost and index of base_pos accordingly
+            pos = [x for _,x in sorted(zip(cost,base_pos))]
+            x = y = 0
+            for j in range(n):
+                x = x + pos[j][0]
+                y = y + pos[j][1]
+            x = x/(1.0*n)
+            y = y/(1.0*n)
+            duration = time.time() - start
+            estimate = [round(x, 2),round(y, 2)]
+            # calculate error
+            error = math.sqrt((estimate[0] - test_pos[k][0])**2 + (estimate[1] - test_pos[k][1])**2)
+            # put them together
+            data = [test_pos[k][0], test_pos[k][1]]
+            data.extend(estimate)
+            data.append(duration)
+            data.append(round(error,2))
+            avg = avg + error
+            #print(data)
+            # store in xlsx
+            #storeData(data, "Exp2_1")
+        print(avg/17.0, comb)
         
 if __name__== "__main__":
         main()
