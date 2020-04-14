@@ -5,7 +5,6 @@ Created on Mon Feb 17 14:26:26 2020
 
 @author: mister-c
 """
-
 import time
 import math
 import locale
@@ -20,35 +19,44 @@ d           = [] # list of distances
 l_rssi      = []
 position    = []
 
+path = "../Data/"
+
 def mse(var):
     sum = 0
     
-    for i in range(0,5):
-        sum = sum + ( (x[i] - var[0])**2 + (y[i] - var[1])**2 + (h[i] - 0.73)**2 - d[i]**2)**2
-
+    sum = sum + ( (x[0] - var[0])**2 + (y[0] - var[1])**2 + (h[0] - 0.73)**2 - d[0]**2)**2
+    sum = sum + ( (x[1] - var[0])**2 + (y[1] - var[1])**2 + (h[1] - 0.73)**2 - d[1]**2)**2
+    sum = sum + ( (x[2] - var[0])**2 + (y[2] - var[1])**2 + (h[2] - 0.73)**2 - d[2]**2)**2
+    sum = sum + ( (x[3] - var[0])**2 + (y[3] - var[1])**2 + (h[3] - 0.73)**2 - d[3]**2)**2
+    sum = sum + ( (x[4] - var[0])**2 + (y[4] - var[1])**2 + (h[4] - 0.73)**2 - d[4]**2)**2
+    sum = sum + ( (x[5] - var[0])**2 + (y[5] - var[1])**2 + (h[5] - 0.73)**2 - d[5]**2)**2
+    
     return sum
 
 def storeData(data,sheetName):
-    path    = "methods.xlsx"
-    wbk     = load_workbook(path)
+    doc    = "methods.xlsx"
+    wbk     = load_workbook(path+doc)
     page    = wbk[sheetName]
     page.append(data)
-    wbk.save(path)
+    wbk.save(path+doc)
 
 def findDistance(a, n, rssi):
     return 10**((a - rssi)/(10*n))
 
+def polynomial(rssi, x0, x1, x2, x3, x4):
+    return x0 + x1*rssi + x2*rssi**2 + x3*rssi**3 + x4*rssi**4
+
 # get position and RSSI from excel
-def getTestData(path):
-    wbk     = load_workbook(path)
-    sheet   = wbk["Average"]
-    cells   = sheet['A2': 'H19']
+def getTestData(doc, page, ini, end):
+    wbk     = load_workbook(path+doc)
+    sheet   = wbk[page]
+    cells   = sheet[ini: end]
     
     for k in range(6):
         l_rssi.append([])
     
     i = -1
-    locale.setlocale(locale.LC_ALL, 'en_US.UTF-8')
+    locale.setlocale(locale.LC_ALL, 'en_GB.UTF-8')
     for pos1, pos2, c1, c2, c3, c4, c5, c6 in cells:
         i = i + 1
         position.append([])
@@ -60,19 +68,20 @@ def getTestData(path):
         l_rssi[3].append(locale.atof(c4.value))
         l_rssi[4].append(locale.atof(c5.value))
         l_rssi[5].append(locale.atof(c6.value))
-
-
+    
+def polyRegression(rssi):    
+    
+    d.append(polynomial(rssi[0],1.90820068e+03,1.39916821e+02,3.80413206e+00,4.54250040e-02,2.01480990e-04))
+    d.append(polynomial(rssi[1],8.03927288e+01,7.86690146e+00,2.73889179e-01,3.94925950e-03,2.06783022e-05))
+    d.append(polynomial(rssi[2],-2.36934558e+01,-1.46667668e+00,-2.52040300e-02,-1.55811131e-04,-1.29126259e-07))
+    d.append(polynomial(rssi[3],3.42350116e+01,1.80886737e+00,2.01219351e-02,-2.59560664e-04,-3.61977580e-06))
+    d.append(polynomial(rssi[4],5.41055459e+02,4.39397008e+01,1.31063670e+00,1.69009265e-02,7.98114859e-05))
+    d.append(polynomial(rssi[5],-2.30666363e+01,-3.59322884e+00,-1.54346312e-01,-2.70287489e-03,-1.65517534e-05))
+    
 def circularAlgorithm(rssi):
     
-    d.append(findDistance(-45.3552, 1.3843, rssi[0]) )
-    d.append(findDistance(-34.2081, 1.9272, rssi[1]))
-    d.append(findDistance(-33.6740, 2.2884, rssi[2]))
-    d.append(findDistance(-40.0409, 2.2704, rssi[3]))
-    d.append(findDistance(-35.9165, 1.9421,rssi[4]))
-    #d.append(findDistance(-41.9144, 1.3344, rssi[5]))
+    polyRegression(rssi)
     
-    #print(rssi)
-    #print(d)
     x0  = np.array([1.0, 1.0])
     res = minimize(mse, x0, method='BFGS', options={'gtol': 1e-8})
     d.clear()
@@ -82,29 +91,24 @@ def circularAlgorithm(rssi):
 
 def main():
     
-    getTestData('testPoints.xlsx')
+    getTestData('testPoints.xlsx', "Average", "A2", "H19")
     n = len(position)
-    j = 0
-    f = open("count.txt", "w")
     
-    while True:
-        j = j + 1
-        print(j)
-        f = open("count.txt", "a")
+    count = 0
+    log = open("Log.txt", "w+")
+    minutes = 60
+    start = time.time()
+    while(True):
+        count = count + 1
+        log = open("Log.txt", "a")
         for i in range(n):
             rssi = [l_rssi[0][i],l_rssi[1][i],l_rssi[2][i],l_rssi[3][i],l_rssi[4][i],l_rssi[5][i]]
-            #calculate duration
-            res = circularAlgorithm(rssi)
-            # calculate precision
-            # put them together
-            #data = [position[i][0], position[i][1]]
-            #data.extend(res)
-            #data.append(duration)
-            #data.append(precision)
-            # store in xlsx
-            #storeData(data,"CircularAlgo")
-        f.write(str(j)+"\n")
-        f.close()
+            circularAlgorithm(rssi)
+        duration = time.time() - start
+        if duration - minutes > 0:
+            log.write(str(minutes) + " " + str(count) + "\n")
+            log.close()
+            minutes = minutes + 60
         
 if __name__== "__main__":
         main()

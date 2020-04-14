@@ -84,17 +84,17 @@ def bar_char_sig_var1():
     y_pos = np.arange(len(labels))
     varr = [0.54,1.34,3.73,3.88,5.16,5.38,1.73,4.01,1.6,0.67,4.01,1.29,2.77,1.38,0.94,1.43,0.77,5.82]
     
-    plt.rcParams.update({'font.size': 14})
+    plt.rcParams.update({'font.size': 16})
     plt.bar(y_pos, varr, align='center', alpha=0.5, color='k')
     plt.xticks(y_pos, [])
-    plt.ylabel('Signal variance (dbm)')
+    plt.ylabel('RSS variance (dbm)')
     plt.xlabel('Test point')
     #plt.title('Mean Squared Error (m)')
     plt.savefig("bar_signal_var_1")
     plt.show()
 
 def bar_char_comparisionMult():
-    objects = ('1', '2', '3', '4')
+    objects = ('A', 'B', 'C', 'D')
     y_pos = np.arange(len(objects))
     performance = [2.65,4.05,4.10,3.39]
     
@@ -102,7 +102,7 @@ def bar_char_comparisionMult():
     plt.bar(y_pos, performance, align='center', alpha=0.5, color='k')
     plt.xticks(y_pos, objects)
     plt.ylabel('Average localization error (m)')
-    plt.xlabel('Combination of anchor nodes')
+    plt.xlabel('Multilaterations with NLS.')
     plt.tight_layout()
     plt.savefig("bar_chart_comparision")
     plt.show()
@@ -117,7 +117,7 @@ def bar_char_fingerK():
     plt.bar(y_pos, performance, align='center', alpha=0.5, color='k')
     plt.xticks(y_pos, objects)
     plt.ylabel('Average localization error (m)')
-    plt.xlabel('Number of anchor node')
+    plt.xlabel('Fingerpriting')
     plt.tight_layout()
     plt.savefig("bar_chart_fingerK")
     plt.show()
@@ -132,7 +132,7 @@ def bar_char_comb():
     plt.bar(y_pos, performance, align='center', alpha=0.5, color='k')
     plt.xticks(y_pos, objects)
     plt.ylabel('Average localization error (m)')
-    plt.xlabel('Combination of anchor nodes')
+    plt.xlabel('Fingerpriting')
     plt.tight_layout()
     plt.savefig("bar_chart_comb")
     plt.show()
@@ -148,8 +148,9 @@ def bar_char_poly():
                    1.792063522316156,
                    1.5560908124570116]
     
+    plt.rcParams.update({'font.size': 14})
     plt.bar(y_pos, performance, align='center', alpha=0.5, color='k')
-    plt.xticks(y_pos, objects)
+    plt.xticks(y_pos, [])
     plt.ylabel('RMSE (m)')
     plt.xlabel('Anchor Node')
     #plt.title('RMSE (m)')
@@ -391,7 +392,7 @@ def main():
     #group_bar_chart_log()
     #points_x_y_finger()
     #bar_char_fingerK()
-    #bar_char_comb()
+    bar_char_comb()
     #points_x_y_finger()
     #points_x_y_log()
     #group_bar_chart_fing()
@@ -402,7 +403,8 @@ def main():
     #bar_char_exp2()
     #bar_char_mult_exp2()
     #bar_char_anchor_exp2()
-    bar_char_anchor_exp2_2()
+    #bar_char_anchor_exp2_2()
+    #bar_char_comparisionMult()
     
 if __name__== "__main__":
     main()
