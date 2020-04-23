@@ -66,6 +66,8 @@ def fingerNN(reg, test_X, test_pos):
 
 def main():
     
+    # default is 12225
+    port = int(sys.argv[1])
     # next create a socket object 
     s = socket.socket()          
     print("Socket successfully created")  
@@ -92,15 +94,17 @@ def main():
     training_X = np.array(base_rssi)
     training_Y = np.array(base_pos)
     test_X = np.array(test_rssi)
-    reg = MLPRegressor(solver='lbfgs', activation='identity', hidden_layer_sizes=(100,))
+    reg = MLPRegressor(solver='lbfgs', activation='identity', hidden_layer_sizes=(10,))
     reg.fit(training_X, training_Y)
     
-    for k in range(0,18):
-        recd_data = channel.recv( 1024 )
-        recd_data = pickle.loads(recd_data)
-        send_data = fingerNN(reg, np.array(recd_data), np.array(test_pos[k]))
-        print(send_data)
-        channel.send(pickle.dumps(send_data))
+    print("Connected...")
+    
+    while(True):
+        for k in range(0,18):
+            recd_data = channel.recv( 1024 )
+            recd_data = pickle.loads(recd_data)
+            send_data = fingerNN(reg, np.array(recd_data), np.array(test_pos[k]))
+            channel.send(pickle.dumps(send_data))
     channel.close()
         
 if __name__== "__main__":

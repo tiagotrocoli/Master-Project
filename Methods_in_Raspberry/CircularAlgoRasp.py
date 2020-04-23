@@ -34,11 +34,11 @@ def mse(var):
     return sum
 
 def storeData(data,sheetName):
-    doc    = "methods.xlsx"
-    wbk     = load_workbook(path+doc)
+    doc    = "energy.xlsx"
+    wbk     = load_workbook(doc)
     page    = wbk[sheetName]
     page.append(data)
-    wbk.save(path+doc)
+    wbk.save(doc)
 
 def findDistance(a, n, rssi):
     return 10**((a - rssi)/(10*n))
@@ -77,10 +77,19 @@ def polyRegression(rssi):
     d.append(polynomial(rssi[3],3.42350116e+01,1.80886737e+00,2.01219351e-02,-2.59560664e-04,-3.61977580e-06))
     d.append(polynomial(rssi[4],5.41055459e+02,4.39397008e+01,1.31063670e+00,1.69009265e-02,7.98114859e-05))
     d.append(polynomial(rssi[5],-2.30666363e+01,-3.59322884e+00,-1.54346312e-01,-2.70287489e-03,-1.65517534e-05))
-    
+
+def lognomal_exp2(rssi):
+
+    d.append(findDistance(8.4955, 9.4119, rssi[0]) )
+    d.append(findDistance(-1.8347, 7.3338, rssi[1]))
+    d.append(findDistance(-1.4735, 7.5332, rssi[2]))
+    d.append(findDistance(-21.3316, 5.9053, rssi[3]))
+    d.append(findDistance(0.2642, 9.749,rssi[4]))
+    d.append(findDistance(-18.7628, 6.4427, rssi[5]))
+
 def circularAlgorithm(rssi):
     
-    polyRegression(rssi)
+    lognomal_exp2(rssi)
     
     x0  = np.array([1.0, 1.0])
     res = minimize(mse, x0, method='BFGS', options={'gtol': 1e-8})
@@ -95,19 +104,22 @@ def main():
     n = len(position)
     
     count = 0
-    log = open("Log.txt", "w+")
     minutes = 60
     start = time.time()
     while(True):
+        
         count = count + 1
-        log = open("Log.txt", "a")
+
         for i in range(n):
             rssi = [l_rssi[0][i],l_rssi[1][i],l_rssi[2][i],l_rssi[3][i],l_rssi[4][i],l_rssi[5][i]]
             circularAlgorithm(rssi)
+            
         duration = time.time() - start
         if duration - minutes > 0:
-            log.write(str(minutes) + " " + str(count) + "\n")
-            log.close()
+            data = []
+            data.append(minutes/60)
+            data.append(count)
+            storeData(data, "counter")
             minutes = minutes + 60
         
 if __name__== "__main__":

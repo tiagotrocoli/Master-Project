@@ -101,14 +101,17 @@ def w_fingerPriting(rssi_base,base_pos,rssi_test,pos_test,n):
 
 def main():
     
+    # number training points to be used as estimator
     n = int(sys.argv[1])
+    # default is 12225
+    port = int(sys.argv[2])
     
     # next create a socket object 
     s = socket.socket()          
     print("Socket successfully created")  
     # reserve a port on your computer in our 
     # case it is 12345 but it can be anything 
-    port = 12225                  
+    #port = 12225                  
     # Next bind to the port 
     # we have not typed any ip in the ip field 
     # instead we have inputted an empty string 
@@ -121,17 +124,19 @@ def main():
     print("socket is listening")            
     # Establish connection with client. 
     channel, addr = s.accept()
-    print('Got connection from', addr) 
+    print('Got connection from', addr)
       
     rssi_base, base_pos = getData('dataBase.xlsx',"Average" ,"A2", "H44")
     rssi_test, test_pos = getData('testPoints.xlsx', "Average",  "A2", "H19")
     
-    for k in range(0,18):
-        recd_data = channel.recv( 1024 )
-        recd_data = pickle.loads(recd_data)
-        send_data = w_fingerPriting(rssi_base,base_pos,recd_data,test_pos[k],n)
-        channel.send(pickle.dumps(send_data))
-    channel.close()
+    print("Connected...")
+    
+    while(True):
+        for k in range(0,18):
+            recd_data = channel.recv( 1024 )
+            recd_data = pickle.loads(recd_data)
+            send_data = w_fingerPriting(rssi_base,base_pos,recd_data,test_pos[k],n)
+            channel.send(pickle.dumps(send_data))
         
 if __name__== "__main__":
         main()

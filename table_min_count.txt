@@ -1,2 +1,6 @@
+Poly Regression
 112 13086 mult. NLS
 106.0 602889 mult. LLS
+109 12408 weighted Mult.
+
+Fingerprinting

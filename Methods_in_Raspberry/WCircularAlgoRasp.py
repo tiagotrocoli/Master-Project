@@ -1,9 +1,9 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Created on Fri Feb 14 19:56:05 2020
+Created on Thu Apr 16 10:02:44 2020
 
-@author: mister-c
+@author: tiago
 """
 
 import time
@@ -47,7 +47,7 @@ i       = 0
 
 def mse(var):
     sum = 0
-    print(i)
+
     sum = sum + ((1.0/weight[i][0])/(total[i]))*( (x[0] - var[0])**2 + (y[0] - var[1])**2 + (h[0] - 0.73)**2 - d[0]**2)**2
     sum = sum + ((1.0/weight[i][1])/(total[i]))*( (x[1] - var[0])**2 + (y[1] - var[1])**2 + (h[1] - 0.73)**2 - d[1]**2)**2
     #sum = sum + ((1.0/weight[i][2])/(total[i]))*( (x[2] - var[0])**2 + (y[2] - var[1])**2 + (h[2] - 0.73)**2 - d[2]**2)**2
@@ -137,33 +137,35 @@ def main():
     n = len(position)
     global i
     
-    tol = 10**(-6)
-    for k in range(n):
-        soma = 0
-        for p in range(5):
-            soma = soma + 1.0/(weight[k][p]+tol)
-        total.append(soma)
-    
-    avg = 0
-    while i < n:
-        rssi = [l_rssi[0][i],l_rssi[1][i],l_rssi[2][i],l_rssi[3][i],l_rssi[4][i],l_rssi[5][i]]
-        #calculate duration
-        start = time.time()
-        res = circularAlgorithm(rssi)
+    count = 0
+    log = open("Log.txt", "w+")
+    minutes = 60
+    start = time.time()
+    while(True):
+        
+        log = open("Log.txt", "a")
+        count = count + 1
+        
+        total.clear()
+        tol = 10**(-6)
+        for k in range(n):
+            soma = 0
+            for p in range(5):
+                soma = soma + 1.0/(weight[k][p]+tol)
+            total.append(soma)
+        
+        i = 0
+        while i < n:
+            rssi = [l_rssi[0][i],l_rssi[1][i],l_rssi[2][i],l_rssi[3][i],l_rssi[4][i],l_rssi[5][i]]
+            res = circularAlgorithm(rssi)
+            i = i + 1
         duration = time.time() - start
-        # calculate precision
-        accuracy = math.sqrt( (position[i][0] - res[0])**2 + (position[i][1] - res[1])**2 )
-        # put them together
-        data = [position[i][0], position[i][1]]
-        data.extend([round(res[0],8), round(res[1],8)])
-        data.append(round(duration,8))
-        data.append(round(accuracy,8))
-        print (','.join(str(x) for x in data))
-        avg = avg + accuracy
-        # store in xlsx
-        #storeData(data,"WeightedMultPoly")
-        i = i + 1
-    print(avg/18.0)
+        if duration - minutes > 0:
+            log.write(str(minutes) + " " + str(count) + "\n")
+            log.close()
+            minutes = minutes + 60
+    
     
 if __name__== "__main__":
         main()
+

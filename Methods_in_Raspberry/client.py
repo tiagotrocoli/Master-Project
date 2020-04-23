@@ -35,35 +35,47 @@ def getData(doc, page, ini, end):
     return row, position
 
 def storeData(data,sheetName):
-    doc    = "methods.xlsx"
-    wbk     = load_workbook(path+doc)
+    doc    = "energy.xlsx"
+    wbk     = load_workbook(doc)
     page    = wbk[sheetName]
     page.append(data)
-    wbk.save(path+doc)
+    wbk.save(doc)
 
 def main():
     
     ipv4 = sys.argv[1]
+    port = int(sys.argv[2])
+    
     mySocket = socket.socket( socket.AF_INET, socket.SOCK_STREAM ) 
-    mySocket.connect( (ipv4, 12225) )
+    mySocket.connect( (ipv4, port) )
     
     rssi_test, test_points = getData('testPoints.xlsx', "Average",  "A2", "H19")
     n = len(test_points)
     
-    for i in range(0,n):
-            
-        start = time.time()
+    count = 0
+    minutes = 60
+    start = time.time()
+    
+    while(True):
         
-        data = pickle.dumps(rssi_test[i])
-        mySocket.send(data)
-        recv_data = mySocket.recv( 1024 )
-        recv_data = pickle.loads(recv_data)
+        count = count + 1
         
+        for i in range(0,n):
+                            
+            data = pickle.dumps(rssi_test[i])
+            mySocket.send(data)
+            recv_data = mySocket.recv( 1024 )
+            recv_data = pickle.loads(recv_data)
+        
+            recv_data[4] = 1
+            #print(recv_data)
         duration = time.time() - start
-        
-        recv_data[4] = duration
-        print(recv_data)
-        storeData(recv_data, "FingerNN")
+        if duration - minutes > 0:
+            data = []
+            data.append(minutes/60)
+            data.append(count)
+            storeData(data, "counter")
+            minutes = minutes + 60
         
     mySocket.close()
 

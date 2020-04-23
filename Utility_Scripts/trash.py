@@ -192,7 +192,7 @@ def group_bar_chart_log():
     bars1 = [3.10, 3.262832114, 3.33322453111111]
     accuracyStd = [1.74472852821789,1.73808722510631,1.73100417117658]
     bars2 = [ 0.17741, 7.571565555556 , 6.506018888889]
-    timeStd = [9.30921681169038E-06, 0.004427410692723, 0.003959537870905]
+    timeStd = [9.30921681169038E-03, 4.427410692723, 3.959537870905]
     bars3 = [1.5, 1.5, 1.5]
     energyStd = [0.5, 0.5, 0.5]
      
@@ -203,8 +203,8 @@ def group_bar_chart_log():
      
     # Make the plot
     rects1 = plt.bar(r1, bars1, width=barWidth, edgecolor='white', label='Avg. localization error (m)', yerr = accuracyStd)
-    rects2 = plt.bar(r2, bars2, width=barWidth, edgecolor='white', label='Response Time (ms)', yerr = timeStd)
-    rects3 = plt.bar(r3, bars3, width=barWidth, edgecolor='white', label='Energy (joules)', yerr = energyStd)
+    rects2 = plt.bar(r2, bars2, width=barWidth, edgecolor='white', label='Avg. response Time (ms)', yerr = timeStd)
+    rects3 = plt.bar(r3, bars3, width=barWidth, edgecolor='white', label='Avg. energy (joules)', yerr = energyStd)
     
     # Add xticks on the middle of the group bars
     #plt.title('Results by metric')
@@ -227,7 +227,7 @@ def group_bar_chart_poly():
     bars1 = [2.91, 2.65, 3.78]
     accuracyStd = [1.64,2.16,2.57]
     bars2 = [ 2.16, 4.67 , 5.67]
-    timeStd = [0.00509565943355, 0.02, 0.002]
+    timeStd = [5.09565943355, 2.1, 2.81]
     bars3 = [1.5, 1.5, 1.5]
     energyStd = [0.5, 0.5, 0.5]
      
@@ -238,8 +238,8 @@ def group_bar_chart_poly():
      
     # Make the plot
     rects1 = plt.bar(r1, bars1, width=barWidth, edgecolor='white', label='Avg. localization error (m)', yerr = accuracyStd)
-    rects2 = plt.bar(r2, bars2, width=barWidth, edgecolor='white', label='Response Time (ms)', yerr = timeStd)
-    rects3 = plt.bar(r3, bars3, width=barWidth, edgecolor='white', label='Energy (joules)', yerr = energyStd)
+    rects2 = plt.bar(r2, bars2, width=barWidth, edgecolor='white', label='Avg. response time (ms)', yerr = timeStd)
+    rects3 = plt.bar(r3, bars3, width=barWidth, edgecolor='white', label='Avg. energy (joules)', yerr = energyStd)
      
     # Add xticks on the middle of the group bars
     #plt.title('Results by metric')
@@ -263,7 +263,7 @@ def group_bar_chart_fing():
     bars1 = [2.19, 2.74, 2.44]
     accuracyStd = [1.36,1.65,1.45]
     bars2 = [ 0.47, 9.36 , 0.65]
-    timeStd = [0, 0, 0]
+    timeStd = [0.01, 2.2, 0.03]
     bars3 = [1.5, 1.5, 1.5]
     energyStd = [0.5, 0.5, 0.5]
      
@@ -274,8 +274,8 @@ def group_bar_chart_fing():
      
     # Make the plot
     rects1 = plt.bar(r1, bars1, width=barWidth, edgecolor='white', label='Avg. localization error (m)', yerr = accuracyStd)
-    rects2 = plt.bar(r2, bars2, width=barWidth, edgecolor='white', label='Response Time (ms)', yerr = timeStd)
-    rects3 = plt.bar(r3, bars3, width=barWidth, edgecolor='white', label='Energy (joules)', yerr = energyStd)
+    rects2 = plt.bar(r2, bars2, width=barWidth, edgecolor='white', label='Avg. response Time (ms)', yerr = timeStd)
+    rects3 = plt.bar(r3, bars3, width=barWidth, edgecolor='white', label='Avg. energy (joules)', yerr = energyStd)
      
     # Add xticks on the middle of the group bars
     #plt.title('Results by metric')
@@ -392,7 +392,7 @@ def main():
     #group_bar_chart_log()
     #points_x_y_finger()
     #bar_char_fingerK()
-    bar_char_comb()
+    #bar_char_comb()
     #points_x_y_finger()
     #points_x_y_log()
     #group_bar_chart_fing()
@@ -405,6 +405,8 @@ def main():
     #bar_char_anchor_exp2()
     #bar_char_anchor_exp2_2()
     #bar_char_comparisionMult()
+    
+    group_bar_chart_fing()
     
 if __name__== "__main__":
     main()

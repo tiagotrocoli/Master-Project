@@ -46,7 +46,7 @@ def getTestData(doc):
         l_rssi.append([])
     
     i = -1
-    locale.setlocale(locale.LC_ALL, 'en_US.UTF-8')
+    locale.setlocale(locale.LC_ALL, 'en_GB.UTF-8')
     for pos1, pos2, c1, c2, c3, c4, c5, c6 in cells:
         i = i + 1
         position.append([])
