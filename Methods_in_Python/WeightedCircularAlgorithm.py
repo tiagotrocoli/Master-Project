@@ -94,14 +94,6 @@ def getTestData(doc):
         l_rssi[4].append(locale.atof(c5.value))
         l_rssi[5].append(locale.atof(c6.value))
 
-def adjustDistances():
-
-    for i in range(4):
-        if d[i] > 12:
-            d[i] = 12.0
-        elif d[i] < 1:
-            d[i] = 1.0
-
 def lognomal(rssi):
 
     d.append(findDistance(-23.1615, 4.3478, rssi[0]) )

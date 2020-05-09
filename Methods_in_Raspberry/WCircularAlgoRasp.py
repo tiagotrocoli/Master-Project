@@ -58,11 +58,11 @@ def mse(var):
     return sum
 
 def storeData(data,sheetName):
-    doc    = "methods.xlsx"
-    wbk     = load_workbook(path+doc)
+    doc    = "energy.xlsx"
+    wbk     = load_workbook(doc)
     page    = wbk[sheetName]
     page.append(data)
-    wbk.save(path+doc)
+    wbk.save(doc)
 
 def findDistance(a, n, rssi):
     return 10**((a - rssi)/(10*n))
@@ -94,22 +94,15 @@ def getTestData(doc):
         l_rssi[4].append(locale.atof(c5.value))
         l_rssi[5].append(locale.atof(c6.value))
 
-def adjustDistances():
 
-    for i in range(4):
-        if d[i] > 12:
-            d[i] = 12.0
-        elif d[i] < 1:
-            d[i] = 1.0
+def lognomal_exp2(rssi):
 
-def lognomal(rssi):
-
-    d.append(findDistance(-23.1615, 4.3478, rssi[0]) )
-    d.append(findDistance(-2.4133, 5.7772, rssi[1]))
-    d.append(findDistance(90961.0223, 15712.5907, rssi[2]))
-    d.append(findDistance(0.2455, 7.4626, rssi[3]))
-    d.append(findDistance(38.7733, 11.7859,rssi[4]))
-    d.append(findDistance(49.1173, 13.8565, rssi[5]))
+    d.append(findDistance(8.4955, 9.4119, rssi[0]) )
+    d.append(findDistance(-1.8347, 7.3338, rssi[1]))
+    d.append(findDistance(-1.4735, 7.5332, rssi[2]))
+    d.append(findDistance(-21.3316, 5.9053, rssi[3]))
+    d.append(findDistance(0.2642, 9.749,rssi[4]))
+    d.append(findDistance(-18.7628, 6.4427, rssi[5]))
     
 def polyRegression(rssi):    
     
@@ -122,7 +115,7 @@ def polyRegression(rssi):
 
 def circularAlgorithm(rssi):
     
-    polyRegression(rssi)
+    lognomal_exp2(rssi)
 
     x0  = np.array([3.0, 1.0])
     res = minimize(mse, x0, method='BFGS', options={'gtol': 1e-8})
@@ -138,12 +131,10 @@ def main():
     global i
     
     count = 0
-    log = open("Log.txt", "w+")
     minutes = 60
     start = time.time()
     while(True):
         
-        log = open("Log.txt", "a")
         count = count + 1
         
         total.clear()
@@ -160,9 +151,12 @@ def main():
             res = circularAlgorithm(rssi)
             i = i + 1
         duration = time.time() - start
+        
         if duration - minutes > 0:
-            log.write(str(minutes) + " " + str(count) + "\n")
-            log.close()
+            data = []
+            data.append(minutes/60)
+            data.append(count)
+            storeData(data, "counter")
             minutes = minutes + 60
     
     
