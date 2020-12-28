@@ -59,11 +59,11 @@ def plotModel(param):
     xnew = np.linspace(data_x[0], data_x[len(data_x)-1], 100)
     
     #print(*param)
-    plt.rcParams.update({'font.size': 20})
+    #plt.rcParams.update({'font.size': 20})
     plt.plot(xnew, lognormal(xnew,*param), color = "k")
-    plt.title("Lognomal path-loss model")
-    plt.xlabel("Average of RSS (dBm)")
-    plt.ylabel("Distance (m)")
+    plt.title("Lognomal path-loss model", fontsize = 28)
+    plt.xlabel("Average of RSS (dBm)", fontsize = 28)
+    plt.ylabel("Distance (m)", fontsize = 28)
     plt.savefig(networks[i]+"_lognormal")
     plt.show()
     

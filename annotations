@@ -1,0 +1,63 @@
+Oi Tiago,
+
+Quinta-feira 14h?
+
+Seguem as anotacoes que eu fiz na sexta-feira:
+
+- Model drift, recalibragem com mudancas
+
+- fingerprinting tem implantacao / treinamento dificil.  se fosse vender uma solucao para localizacao hoje, qual metodo usaria? a resposta depende do tipo de aplicacao?
+
+- Impacto da escolha do subconjunto parece tao importante quanto a do método. combinando com posicionamento das ancoras, como ter bons resultados sem uma exploraćao exaustiva?
+
+Gustavo
+
+Resumo
+
+Melhorar a descrićão dos resultados. Frases muito longas. Quebrar em trechos menores.
+
+Intro
+
+- Tecnologias: usou somente WiFi. Falar de ZigBee, WiFi 5GHz. Delimitar melhor o escopo da tecnologia que foi usada (WiFi 2GHz)
+
+- Separar objetivos específicos em uma subsection
+
+Contribuicões/perguntas
+
+- Qual é a receita/critérios para escolha de melhor posicao (subconjunto otimo)?
+
+- Consumo de energia: o importante é processamento ou troca de mensagens?
+-- Deixar mais claro que fingerprinting tem mais troca de mensagens
+-- Como o fingerprinting se deu melhor em termos de energia?
+--- Na figura 3.4: numero de mensagens, adicionar frequencia, tamanho das mensagens
+
+Conclusão
+
+- Recomendacao do algoritmo para aplicacões diferentes
+
+Juliana
+
+Intro
+
+- Poderia explicitar melhor as contribuicoes. Quais foram os resultados concretos.
+
+- Padrao dos nomes nas citacoes
+
+- Juntar as duas tabelas em uma sessao de Resumo
+
+- Mathematical notes (na 3.2.2) poderia ir para o anexo pra melhorar fluencia do texto.
+
+- Como o seu trabalho ajuda na escolha do subconjunto otimo?
+-- R: fit da curva mais proxima do lognormal. Incluir esta discussão mais aprofundada na conclusao e contribuicoes
+
+- No background, incluir uma pequena sessao de conclusao sobre relacionamento dos conceitos com o trabalho.
+
+- Medida de energia nos nós ancoras ou nos nós móveis? Tem diferenca entre o consumo nos ancoras e nos nós móveis?  Tem que deixar isso mais claro no texto.
+
+- Conclusão: enfatizar mais o problema/contribuicoes. subsection de limitacoes e trabalhos futuros.
+
+
+- Me assustei com a resposta do Tiago que energia é no nó ancora. No ancora tá ancorado, pode estar ligado numa tomada.
+
+
+- Agradecer as contribuicoes da Profa. Juliana desde a qualificacao, que nos ajudaram a delimitar melhor o problema / terminologia. Profa. Esther também. Qualificacao sempre é util, mas neste trabalho realmente permitiu refinar muito rapidamente os objetivos. Na semana seguinte à qualificacao o Tiago já estava comecando os resultados.

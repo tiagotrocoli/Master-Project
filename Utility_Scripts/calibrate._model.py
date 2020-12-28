@@ -26,6 +26,9 @@ networks = ['TiagoLocalizacao1','TiagoLocalizacao2','TiagoLocalizacao0','TiagoLo
 # x[0] = A, x[1] = n (path-loss coefficient)
 # for each sensor, calibrate...
 
+def lognormal(rss, a, n):
+    return 10**((a - rss)/(10*n))
+
 def polynomial(rssi, x0, x1, x2, x3, x4):
     return x0 + x1*rssi + x2*rssi**2 + x3*rssi**3 + x4*rssi**4
 
@@ -35,9 +38,20 @@ def calibrate():
     sort_x = np.array((itemgetter(*index)(avg[i])), dtype = float)
     sort_y = np.array((itemgetter(*index)(dist[i])),dtype = float)
     
-    
+    print(len(index))
     init_vals = [1.0,1.0,1.0,1.0,1.0]
     param, _  = optimize.curve_fit(polynomial, sort_x, sort_y, p0 = init_vals)
+    
+    return param
+
+def calibrate_1():
+    
+    index  = list(np.argsort(avg[i]))
+    sort_x = np.array((itemgetter(*index)(avg[i])), dtype = float)
+    sort_y = np.array((itemgetter(*index)(dist[i])),dtype = float)
+    
+    init_vals = [1.0,1.0]
+    param, _  = optimize.curve_fit(lognormal, sort_x, sort_y, p0 = init_vals)
     
     return param
    
@@ -51,21 +65,21 @@ def rsme(param):
 def plotModel(param):
         
     data_x = np.sort(avg[i])
-    cost = rsme(param)
+    #cost = rsme(param)
     plt.figure(figsize=(10.0,8.0))
     for s in range(len(dist[i])):
         plt.plot(avg[i][s],dist[i][s],'ko')
-    print(cost)
+    #print(cost)
     xnew = np.linspace(data_x[0], data_x[len(data_x)-1], 100)
-    print(*param)
+    #print(*param)
     #print(data_x[0], data_x[len(data_x)-1])
     #plt.rcParams.update({'font.size': 20})
-    #plt.plot(xnew, polynomial(xnew,*param), color = "k")
-    #plt.title("Polynomial Model")
-    #plt.xlabel("Average of RSS (dBm)")
-    #plt.ylabel("Distance (m)")
-    #plt.savefig(networks[i]+"_Polymodel")
-    #plt.show()
+    plt.plot(xnew, polynomial(xnew,*param), color = "k")
+    plt.title("Polynomial Model", fontsize = 28)
+    plt.xlabel("Average of RSS (dBm)", fontsize = 28)
+    plt.ylabel("Distance (m)", fontsize = 28)
+    plt.savefig(networks[i]+"_Polymodel")
+    plt.show()
     
 def removeDuplicate(dist,rssi):
     

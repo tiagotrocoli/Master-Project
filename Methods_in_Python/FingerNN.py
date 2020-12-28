@@ -48,17 +48,37 @@ def getData(doc, page, ini, end):
     
     return row, position
 
+def getData2(doc, page, ini, end):
+    wbk     = load_workbook(path+doc)
+    sheet   = wbk[page]
+    cells   = sheet[ini : end]
+    
+    position = []
+    row = []
+
+    i = -1
+    locale.setlocale(locale.LC_ALL, 'en_US.UTF-8')
+    for pos1, pos2, c1, c2, c3, c4, c5, c6 in cells:
+        i = i + 1
+        position.append([])
+        position[i].append(pos1.value)
+        position[i].append(pos2.value)
+        row.append([c1.value, c2.value, c3.value, c4.value, c5.value, c6.value])
+
+    return row, position
+
 def main():
     
     avg = 0
-    base_rssi, base_pos = getData('dataBase.xlsx',"Sheet1" ,"A2", "G431")
-    test_rssi, test_pos = getData('testPoints.xlsx', "Average",  "A2", "G19")
-    training_X = np.array(base_rssi)
-    training_Y = np.array(base_pos)
-    test_X = np.array(test_rssi)
+    base_rssi, base_pos = getData2('dataBase.xlsx',"Experiment2" ,"A2", "H38")
+    test_rssi, test_pos = getData2('testPoints.xlsx', "Average",  "A2", "H18")
+    test_pos = np.array(test_pos, dtype = np.float32)
+    training_X = np.array(base_rssi, dtype = np.float32)
+    training_Y = np.array(base_pos, dtype = np.float32)
+    test_X = np.array(test_rssi, dtype = np.float32)
     reg = MLPRegressor(solver='lbfgs', activation='identity', hidden_layer_sizes=(10,))
     reg.fit(training_X, training_Y)
-    for i in range(0,18):
+    for i in range(0,17):
         start = time.time()
         pred_y_test = reg.predict(test_X[i].reshape(1,-1))
         duration = time.time() - start
@@ -71,6 +91,6 @@ def main():
         avg = avg + accuracy
         print(data)
         #storeData(data,"FingerNN")
-    print(avg/18.0)
+    print(avg/17.0)
 if __name__== "__main__":
         main()

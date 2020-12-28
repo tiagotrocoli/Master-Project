@@ -12,6 +12,7 @@ import locale
 import numpy as np
 from openpyxl import load_workbook
 from scipy.optimize import minimize
+from itertools import permutations 
 
 #x           = [4.4, 2.2, 0, 6.6, 0, 6.6]
 #y           = [2.6,13.0,6.5, 10.4, 3.9, 7.8]
@@ -41,13 +42,12 @@ def mse(var):
 def mse2(var):
     sum = 0
     
-    sum = sum + ( (x[0] - var[0])**2 + (y[0] - var[1])**2 - d[0]**2)**2
-    sum = sum + ( (x[1] - var[0])**2 + (y[1] - var[1])**2 - d[1]**2)**2
-    sum = sum + ( (x[2] - var[0])**2 + (y[2] - var[1])**2 - d[2]**2)**2
-    #sum = sum + ( (x[3] - var[0])**2 + (y[3] - var[1])**2 - d[3]**2)**2
-    #sum = sum + ( (x[4] - var[0])**2 + (y[4] - var[1])**2 - d[4]**2)**2
-    #sum = sum + ( (x[5] - var[0])**2 + (y[5] - var[1])**2 - d[5]**2)**2
-    
+    #sum = sum + ( (x[0] - var[0])**2 + (y[0] - var[1])**2 - d[0]**2)**2
+    #sum = sum + ( (x[1] - var[0])**2 + (y[1] - var[1])**2 - d[1]**2)**2
+    #sum = sum + ( (x[2] - var[0])**2 + (y[2] - var[1])**2 - d[2]**2)**2
+    sum = sum + ( (x[3] - var[0])**2 + (y[3] - var[1])**2 - d[3]**2)**2
+    sum = sum + ( (x[4] - var[0])**2 + (y[4] - var[1])**2 - d[4]**2)**2
+    sum = sum + ( (x[5] - var[0])**2 + (y[5] - var[1])**2 - d[5]**2)**2
     return sum
 
 def storeData(data,sheetName):
@@ -62,6 +62,7 @@ def findDistance(a, n, rssi):
 
 def polynomial(rssi, x0, x1, x2, x3, x4):
     return x0 + x1*rssi + x2*rssi**2 + x3*rssi**3 + x4*rssi**4
+
 
 # get position and RSSI from excel
 def getTestData(doc, page, ini, end):
@@ -86,6 +87,7 @@ def getTestData(doc, page, ini, end):
         l_rssi[4].append(c5.value)
         l_rssi[5].append(c6.value)
 
+
 def lognomal(rssi):
 
     d.append(findDistance(-23.1615, 4.3478, rssi[0]) )
@@ -104,7 +106,7 @@ def lognomal_exp2(rssi):
     d.append(findDistance(0.2642, 9.749,rssi[4]))
     d.append(findDistance(-18.7628, 6.4427, rssi[5]))
     
-def polyRegression(rssi):    
+def polynomial_exp1(rssi):    
     
     d.append(polynomial(rssi[0],1.90820068e+03,1.39916821e+02,3.80413206e+00,4.54250040e-02,2.01480990e-04))
     d.append(polynomial(rssi[1],8.03927288e+01,7.86690146e+00,2.73889179e-01,3.94925950e-03,2.06783022e-05))
@@ -112,14 +114,23 @@ def polyRegression(rssi):
     d.append(polynomial(rssi[3],3.42350116e+01,1.80886737e+00,2.01219351e-02,-2.59560664e-04,-3.61977580e-06))
     d.append(polynomial(rssi[4],5.41055459e+02,4.39397008e+01,1.31063670e+00,1.69009265e-02,7.98114859e-05))
     d.append(polynomial(rssi[5],-2.30666363e+01,-3.59322884e+00,-1.54346312e-01,-2.70287489e-03,-1.65517534e-05))
+
+def polynomial_exp2(rssi):    
     
+    d.append(polynomial(rssi[0],-1.04677560e+02,-8.43418050e+00,-2.41329137e-01,-2.99784603e-03,-1.35071060e-05))
+    d.append(polynomial(rssi[1],6.75010158e+01,5.42156108e+00,1.56931129e-01,1.85139117e-03,7.65654151e-06))
+    d.append(polynomial(rssi[2],2.37812739e+02,1.91631461e+01,5.61308656e-01,7.02168500e-03,3.19705302e-05))
+    d.append(polynomial(rssi[3],1.66812553e+02,1.30910570e+01,3.70048492e-01,4.44918165e-03,1.94958486e-05))
+    d.append(polynomial(rssi[4],1.16571208e+02,1.01184914e+01,3.12116567e-01,4.04167347e-03,1.88556599e-05))
+    d.append(polynomial(rssi[5],1.99163123e+01,1.78888185e+00,5.49568407e-02,6.48346195e-04,2.66866033e-06))
+
 def circularAlgorithm(rssi):
     
-    lognomal_exp2(rssi)
+    polynomial_exp2(rssi)
     
     #print(rssi)
     #print(d)
-    x0  = np.array([1.0, 1.0])
+    x0  = np.array([1.0, 1.0, 1.0, 1.0, 1.0])
     res = minimize(mse2, x0, method='BFGS', options={'gtol': 1e-8})
     d.clear()
     
@@ -131,6 +142,7 @@ def main():
     getTestData('testPoints.xlsx', "Average_exp2", "A2", "H18")
     n = len(position)
     avg = 0
+    std_error = []
     
     for i in range(n):
         rssi = [l_rssi[0][i],l_rssi[1][i],l_rssi[2][i],l_rssi[3][i],l_rssi[4][i],l_rssi[5][i]]
@@ -140,6 +152,7 @@ def main():
         duration = time.time() - start
         # calculate precision
         accuracy = math.sqrt( (position[i][0] - res[0])**2 + (position[i][1] - res[1])**2 )
+        std_error.append(accuracy)
         # put them together
         data = [position[i][0], position[i][1]]
         data.extend([round(res[0],8), round(res[1],8)])
@@ -149,7 +162,7 @@ def main():
         avg = avg + accuracy
         # store in xlsx
         #storeData(data,"CirculaAlgo_exp2")
-    print(avg/17.0)
+    print(avg/17.0, np.std(std_error))
     
 if __name__== "__main__":
         main()

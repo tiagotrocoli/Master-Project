@@ -72,9 +72,9 @@ def plotModel(x, fun):
         result.append(findDistance(x[0],x[1],xnew[l]))
     
     plt.plot(xnew, result, color = "k")
-    plt.title("Lognormal Path-loss Model")
-    plt.xlabel("Average of RSS (dBm)")
-    plt.ylabel("Distance (m)")
+    plt.title("Lognormal Path-loss Model", fontsize = 18)
+    plt.xlabel("Average of RSS (dBm)", fontsize = 18)
+    plt.ylabel("Distance (m)", fontsize = 18)
     #plt.savefig(networks[i]+"_lognormal")
     plt.ylim(0,12)
     #plt.show()

@@ -12,10 +12,14 @@ import math
 import locale
 from openpyxl import load_workbook
 from itertools import permutations 
+import numpy as np
 
-x           = [4.4, 2.2, 0, 6.6, 0, 6.6]
-y           = [2.6,13.0,6.5, 10.4, 3.9, 7.8]
-h           = [0.76, 1.7, 1.65, 1.17, 2.02, 1.52]
+#x           = [4.4, 2.2, 0, 6.6, 0, 6.6]
+#y           = [2.6,13.0,6.5, 10.4, 3.9, 7.8]
+#h           = [0.76, 1.7, 1.65, 1.17, 2.02, 1.52]
+
+x = [-4.0, 4.0, -4.6, -2.0, -2.74, 2.0]
+y = [4.6, 2.4, 1.84, 5.52, 0.92, 0.8]
 
 path = "../Data/"
 
@@ -70,7 +74,8 @@ def main():
     #comb = [0,1,2]
     #n = len(comb)
     
-    combs = permutations([0,1,2,3,4,5], 4)
+    #combs = permutations([0,1,2,3,4,5], 4)
+    combs = [[4,3,1,2]]
     n = 4
     l_base, base_pos = getData2('dataBase.xlsx',"Experiment2" ,"A2", "H38")
     l_test, test_pos = getData2('testPoints.xlsx', "Experiment2",  "A2", "H18")
@@ -78,6 +83,7 @@ def main():
     for comb in combs:
         k = -1
         avg = 0
+        std_error = []
         for point in l_test:
             k = k + 1
             cost = []
@@ -100,6 +106,7 @@ def main():
             estimate = [round(x, 2),round(y, 2)]
             # calculate error
             error = math.sqrt((estimate[0] - test_pos[k][0])**2 + (estimate[1] - test_pos[k][1])**2)
+            std_error.append(error)
             # put them together
             data = [test_pos[k][0], test_pos[k][1]]
             data.extend(estimate)
@@ -108,8 +115,8 @@ def main():
             avg = avg + error
             #print(data)
             # store in xlsx
-            #storeData(data, "Exp2_1")
-        print(avg/17.0, comb)
+            storeData(data, "FingerKNN_exp2")
+        print(avg/17.0, np.std(std_error), comb)
         
 if __name__== "__main__":
         main()

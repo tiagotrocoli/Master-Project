@@ -1,0 +1,6 @@
+\fichacatalografica{pictures/Ficha-Catalografica-Protocolo-831749620.pdf}
+
+
+
+% Este comando deve ficar aqui:
+\paginasiniciais

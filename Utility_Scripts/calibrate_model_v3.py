@@ -8,9 +8,10 @@ Created on Sat Apr  4 16:31:25 2020
 
 import os
 import math
-from scipy.optimize import minimize
+from scipy import optimize
 import numpy as np
 import matplotlib.pyplot as plt
+from operator import itemgetter 
 from openpyxl import load_workbook
 import matplotlib
 
@@ -31,40 +32,62 @@ def mse1(x):
     
     total = 0
     for j in range(n):
-        total = total + (dist[j][i] - findDistance(x[0], x[1], avg[j][i]))**2
+        total = total + (dist[j][i] - polynomial(avg[j][i], x[0], x[1], x[2], x[3], x[4]))**2
     return total/n
 
-def calibrate():
-    x0 = np.array([1.0, 1.0])
-    res = minimize(mse1, x0, method='L-BFGS-B', options={'gtol': 1e-8, 'disp': False})
-    return res
+#def calibrate():
+#    x0 = np.array([1.0, 1.0, 2.0, 0.5, 3.0])
+#    res = minimize(mse1, x0, method='L-BFGS-B', options={'gtol': 1e-8, 'disp': False})
+#    return res
 
-def findDistance(a, n, rss):
+def calibrate():
+    
+    rss_i  = []
+    dist_i = []
+    for s in range(n):
+        rss_i.append(avg[s][i])
+        dist_i.append(dist[s][i])
+        
+    index  = list(np.argsort(rss_i))
+    sort_x = np.array((itemgetter(*index)(rss_i)), dtype = float)
+    sort_y = np.array((itemgetter(*index)(dist_i)),dtype = float)
+ 
+    init_vals = [1.0,1.0, 0.0, 0.0, 2.0]
+    param, _  = optimize.curve_fit(polynomial, sort_x, sort_y, p0 = init_vals)
+    return param
+
+def rsme(param):
+    sum = 0
+    n = len(dist[i])
+    for j in range(n):
+        sum = sum + ( dist[i][j] -  polynomial(avg[i][j], *param ))**2
+    return np.sqrt(sum/n)
+
+def lognormal(rss, a, n):
     return 10**((a - rss)/(10*n))
 
-def plotModel(x, fun):
-    
-    cost = np.sqrt(fun)
-    
+def polynomial(rssi, x0, x1, x2, x3, x4):
+    return x0 + x1*rssi + x2*rssi**2 + x3*rssi**3 + x4*rssi**4
+
+def plotModel(param):
+        
+    data_x = np.sort(avg[i])
+    print(rsme(param))
     plt.figure(figsize=(10.0,8.0))
     rss = []
     for s in range(n):
         rss.append(avg[s][i])
         plt.plot(avg[s][i], dist[s][i],'ko')
-    
     data_x = np.sort(rss)
     xnew = np.linspace(data_x[0], data_x[len(data_x)-1], 100)
-    
-    result = []
-    for l in range(100):
-        result.append(findDistance(x[0],x[1],xnew[l]))
-        
-    plt.rcParams.update({'font.size': 20})
-    plt.plot(xnew, result, color = "k")
-    plt.title("Lognormal Path-loss Model (Experiment 2)")
-    plt.xlabel("Average of RSS (dBm)")
-    plt.ylabel("Distance (m)")
-    plt.savefig(networks[i]+"_lognormal_2")
+    #print(*param)
+    #print(data_x[0], data_x[len(data_x)-1])
+    #plt.rcParams.update({'font.size': 20})
+    plt.plot(xnew, polynomial(xnew,*param), color = "k")
+    plt.title("Lognormal Model (2nd experiment)", fontsize = 28)
+    plt.xlabel("Average of RSS (dBm)", fontsize = 28)
+    plt.ylabel("Distance (m)", fontsize = 28)
+    plt.savefig(networks[i]+"_Lognormal_exp2")
     plt.show()
     
 def getData2(ini, end):
@@ -85,8 +108,9 @@ def main():
     getData2("A2", "L38")
     
     while(i < m):
-        res = calibrate()
-        plotModel(res.x, res.fun)
+        param = calibrate()
+        #print(rsme(param), param)
+        plotModel(param)
         i = i + 1
         
 if __name__== "__main__":
