@@ -8,5 +8,16 @@ In this work, we present a comparative study of RSS-based localization technique
 <img src="/images/objective.PNG" height="80%" width="80%">  
 </p>
 
+# 2. What is RSS?
+It is the received signal strength emitted from an anchor node to a mobile node. This project used Wi-Fi signals.
 
-# 2. Multilateration
+<p align="center">
+<img src="/images/signals.PNG" height="60%" width="60%">  
+</p>
+
+
+# 3. Multilateration
+
+
+
+# 4. Fingerprinting
