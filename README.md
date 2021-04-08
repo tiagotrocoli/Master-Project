@@ -36,8 +36,8 @@ an anchor and mobile node. This project used Wi-Fi signals.
 # 4. Anchor node calibration
 
 It is a process in which it is possible to estimate the distance of a especific anchor node reguarding any position of the indoor enviorement.
-The process envolves finding a distance estimator (function) based on data of known position and distance. We can use any regression function,
-but in this project we used two: polynomial and lognormal function. 
+The process envolves finding a distance estimator (function) based on data of known position and distance. The known data pair (position, distance)
+is called training points. We can use any regression function, but in this project we used two: polynomial and lognormal function. 
 
 # 5. Indoor Enviorements
 
@@ -55,9 +55,10 @@ The image does not show furniture.
 <img src="/images/experiment_2.png" height="60%" width="60%">  
 </p>
 
-
 # 6. Multilateration
 
-
+<p align="center">
+<img src="/images/multilateration.PNG" height="60%" width="60%">  
+</p>
 
 # 7. Fingerprinting
