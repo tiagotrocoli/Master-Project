@@ -9,7 +9,7 @@ In this work, we present a comparative study of RSS-based localization technique
 # 2. Problem
 
 <p align="center">
-<img src="/images/problem.PNG" height="60%" width="60%">  
+<img src="/images/problem.PNG" height="80%" width="80%">  
 </p>
 
 # 3. What is RSS?
