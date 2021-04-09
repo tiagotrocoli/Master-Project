@@ -41,7 +41,7 @@ is called training points. We can use any regression function, but in this proje
 two estimation models.
 
 <p align="center">
-<img src="/images/twoModels.PNG" height="60%" width="60%">  
+<img src="/images/twoModels.PNG" height="70%" width="70%">  
 </p>
 
 Given the model below:
