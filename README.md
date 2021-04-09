@@ -47,7 +47,7 @@ two estimation models.
 Given the model below:
 
 <p align="center">
-<img src="/images/model.PNG" height="60%" width="60%">  
+<img src="/images/model.png" height="60%" width="60%">  
 </p>
 
 in which g(<b>a</b><sub>i</sub>, rss<sub>ij</sub>) is a model of <i>k</i> parameters, rss<sub>ij</sub> and d&#770<sub>ij</sub> are the RSS and the 
@@ -57,6 +57,14 @@ to all these points. To do that, least squares was applied:
 
 <p align="center">
 <img src="/images/LeastSquare.PNG" height="60%" width="60%">  
+</p>
+
+in which d<sub>ij</sub> is the real distance from anchor node <i>i</i> to training point <i>j</i>. Since there were 6 anchor nodes, 6 calibrations were done 
+using polynomial and 6 for lognormal shadowing path-loss model. Also, rss<sub>ij</sub> is the mean value of N samples of RSS from anchor node <i>i</i> to 
+training point <i>j</i>, that is:
+
+<p align="center">
+<img src="/images/mean.PNG" height="60%" width="60%">  
 </p>
 
 # 5. Indoor Enviorements
