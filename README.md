@@ -47,13 +47,17 @@ two estimation models.
 Given the model below:
 
 <p align="center">
-<img src="/images/model.png" height="60%" width="60%">  
+<img src="/images/model.PNG" height="60%" width="60%">  
 </p>
 
-in which g(<b>a</b><sub>i</sub>, rss<sub>ij</sub>) is a model of <i>k</i> parameters, rss<sub>ij</sub> and ^d<sub>ij</sub> are the RSS and the 
+in which g(<b>a</b><sub>i</sub>, rss<sub>ij</sub>) is a model of <i>k</i> parameters, rss<sub>ij</sub> and d&#770<sub>ij</sub> are the RSS and the 
 estimated distance of anchor node <i>i</i> to the training point <i>j</i>, respectively. Calibration of anchor node <i>i</i> estimates the best parameters <b>a</b><sub>i</sub> 
 given all RSS (rss<sub>i1</sub>, rss<sub>i2</sub>, ..., rss<sub>im</sub>) of training points to minimize differences between the actual and estimated distances from anchor node <i>i</i> 
-to all these points.  To do that, least squares was applied:  
+to all these points. To do that, least squares was applied:  
+
+<p align="center">
+<img src="/images/LeastSquare.PNG" height="60%" width="60%">  
+</p>
 
 # 5. Indoor Enviorements
 
