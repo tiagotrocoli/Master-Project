@@ -47,7 +47,7 @@ two estimation models.
 Given the model below:
 
 <p align="center">
-<img src="/images/model.png" height="30%" width="30%">  
+<img src="/images/model.png" height="20%" width="20%">  
 </p>
 
 in which g(<b>a</b><sub>i</sub>, rss<sub>ij</sub>) is a model of <i>k</i> parameters, rss<sub>ij</sub> and d&#770<sub>ij</sub> are the RSS and the 
