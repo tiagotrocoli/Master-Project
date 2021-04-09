@@ -38,7 +38,7 @@ an anchor and mobile node. This project used Wi-Fi signals.
 It is a process in which it is possible to estimate the distance of any position of the indoor enviorement from a especific anchor node.
 The process envolves finding a distance estimator (function) based on data of known position and distance. The known data pair (position, distance)
 is called training points. We can use any regression function, but in this project we used two: polynomial and lognormal function. The image below shows
-two estimation model.
+two estimation models.
 
 <p align="center">
 <img src="/images/twoModels.PNG" height="60%" width="60%">  
@@ -47,12 +47,12 @@ two estimation model.
 Given the model below:
 
 <p align="center">
-<img src="/images/model.PNG" height="60%" width="60%">  
+<img src="/images/model.png" height="60%" width="60%">  
 </p>
 
-in which $g(\textbf{a}_i, rss_{ij})$ is a model of $k$ parameters, rss_{ij}  and ^d_{ij} are the RSS and the 
-estimated distance of anchor node $i$ to the training point $j$, respectively. Calibration of anchor node $i$ estimates the best parameters $\textbf{a}_i$ 
-given all RSS ($rss_{i1}, rss_{i2}, ..., rss_{im}$) of training points to minimize differences between the actual and estimated distances from anchor node $i$ 
+in which g(<b>a</b><sub>i</sub>, rss<sub>ij</sub>) is a model of $k$ parameters, rss<sub>ij</sub> and ^d<sub>ij</sub> are the RSS and the 
+estimated distance of anchor node <i>i</i> to the training point <i>j</i>, respectively. Calibration of anchor node <i>i</i> estimates the best parameters <b>a</b><sub>i</sub> 
+given all RSS (rss<sub>i1<\sub>, rss<sub>i2<\sub>, ..., rss<sub>im<\sub>) of training points to minimize differences between the actual and estimated distances from anchor node <i>i</i> 
 to all these points.  To do that, least squares was applied:  
 
 # 5. Indoor Enviorements
