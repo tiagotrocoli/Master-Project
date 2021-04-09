@@ -22,7 +22,7 @@ that emit signals to mobile devices. Mobile devices can use received signal stre
 methods to estimate their position.
 
 <p align="center">
-<img src="/images/problem.PNG" height="80%" width="80%">  
+<img src="/images/problem.PNG" height="100%" width="100%">  
 </p>
 
 # 3. What is RSS?
@@ -35,9 +35,25 @@ an anchor and mobile node. This project used Wi-Fi signals.
 
 # 4. Anchor node calibration
 
-It is a process in which it is possible to estimate the distance of a especific anchor node reguarding any position of the indoor enviorement.
+It is a process in which it is possible to estimate the distance of any position of the indoor enviorement from a especific anchor node.
 The process envolves finding a distance estimator (function) based on data of known position and distance. The known data pair (position, distance)
-is called training points. We can use any regression function, but in this project we used two: polynomial and lognormal function. 
+is called training points. We can use any regression function, but in this project we used two: polynomial and lognormal function. The image below shows
+two estimation model.
+
+<p align="center">
+<img src="/images/twoModels.PNG" height="60%" width="60%">  
+</p>
+
+Given the model below:
+
+<p align="center">
+<img src="/images/model.PNG" height="60%" width="60%">  
+</p>
+
+in which $g(\textbf{a}_i, rss_{ij})$ is a model of $k$ parameters, rss_{ij}  and ^d_{ij} are the RSS and the 
+estimated distance of anchor node $i$ to the training point $j$, respectively. Calibration of anchor node $i$ estimates the best parameters $\textbf{a}_i$ 
+given all RSS ($rss_{i1}, rss_{i2}, ..., rss_{im}$) of training points to minimize differences between the actual and estimated distances from anchor node $i$ 
+to all these points.  To do that, least squares was applied:  
 
 # 5. Indoor Enviorements
 
