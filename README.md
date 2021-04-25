@@ -85,10 +85,16 @@ The image does not show furniture.
 
 # 6. Multilateration
 
+Multilateration estimates a mobile node position based on distances from it to anchor nodes. To estimate the distance, the method needs the position of anchor nodes 
+and distance estimator for each anchor node which is described in the section "Anchor node calibration". The method that deploys exactly three anchor nodes is called 
+lateration.  Multilateration is a generalization of it which uses more than three of them. The image below depicts the method.
+
 <p align="center">
 <img src="/images/multilateration.PNG" height="60%" width="60%">  
 </p>
 
+The method has 6 variations depending on how it estimates the position and the calibration of anchor nodes. It can use linear least squares (LLS), non-linear least squares (NLS) or weighted 
+non-linear least squares (weighted NLS). The 3 algorithms below relate to these variations.
 
 <p align="center">
 <img src="/images/LLS.PNG" height="60%" width="60%">  
