@@ -89,4 +89,19 @@ The image does not show furniture.
 <img src="/images/multilateration.PNG" height="60%" width="60%">  
 </p>
 
+
+<p align="center">
+<img src="/images/LLS.PNG" height="60%" width="60%">  
+</p>
+
+
+<p align="center">
+<img src="/images/NLS.PNG" height="60%" width="60%">  
+</p>
+
+
+<p align="center">
+<img src="/images/weighted.PNG" height="60%" width="60%">  
+</p>
+
 # 7. Fingerprinting
