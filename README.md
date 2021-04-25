@@ -90,7 +90,7 @@ and distance estimator for each anchor node which is described in the section "A
 lateration.  Multilateration is a generalization of it which uses more than three of them. The image below depicts the method.
 
 <p align="center">
-<img src="/images/lateration.PNG" height="60%" width="60%">  
+<img src="/images/lateration.PNG" height="40%" width="40%">  
 </p>
 
 The method has 6 variations depending on how it estimates the position and the calibration of anchor nodes. It can use linear least squares (LLS), non-linear least squares (NLS) or weighted 
