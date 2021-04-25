@@ -73,7 +73,7 @@ The first experiment was in a lab of University of Campinas (Unicamp) with ancho
 filled ones are test points, rounded squares are tables and writing desks with office chairs. The image does not show computers and other furniture.
 
 <p align="center">
-<img src="/images/MapOfExperiment.png" height="60%" width="60%">  
+<img src="/images/lateration.PNG" height="60%" width="60%">  
 </p>
 
 The second experiment took place two fully furnished rooms where. The crossed circles with a number are test points, the others are training points. 
